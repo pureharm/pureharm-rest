@@ -90,7 +90,7 @@ val pureharmJSONV = "0.1.0-3ab2d2c" //https://github.com/busymachines/pureharm-j
 val pureharmTestkitV = "0.1.0-3697355" //https://github.com/busymachines/pureharm-testkit/releases
 
 lazy val http4sV = "0.21.20" //https://github.com/http4s/http4s/releases
-lazy val tapirV  = "0.17.16"  //https://github.com/softwaremill/tapir/releases
+lazy val tapirV  = "0.17.19"  //https://github.com/softwaremill/tapir/releases
 
 //for testing only
 val log4catsV = "1.2.0" //https://github.com/typelevel/log4cats/releases
