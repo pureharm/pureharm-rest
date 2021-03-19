@@ -44,12 +44,12 @@ object MyAppDocs {
     )
   }
 
-  def generateYAML[F[_]: Monad]: String = {
+  def generateYAML[F[_]]: String = {
     import sttp.tapir.openapi.circe.yaml._
     generate[F].toYaml
   }
 
-  def generate[F[_]: Monad]: OpenAPI = {
+  def generate[F[_]]: OpenAPI = {
     import sttp.tapir.openapi._
     import sttp.tapir.docs.openapi._
 

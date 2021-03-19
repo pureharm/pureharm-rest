@@ -34,7 +34,7 @@ trait PureharmHttp4sCirceInstances {
 
   import PureharmHttp4sCirceInstances._
 
-  /** This code was copied from [[org.http4s.circe.CirceInstances#jsonEncoderWithPrinter]]
+  /** This code was copied from org.http4s.circe.CirceInstances#jsonEncoderWithPrinter
     * Ideally, we would have done directly:
     * {{{
     *   circeInstance.jsonEncoderOf[F, T]
@@ -43,7 +43,7 @@ trait PureharmHttp4sCirceInstances {
     *
     * @return
     */
-  implicit def applicativeEntityJsonEncoder[F[_]: Applicative, T: Encoder]: EntityEncoder[F, T] =
+  implicit def pureharmHttps4sEntityJsonEncoder[F[_], T: Encoder]: EntityEncoder[F, T] =
     EntityEncoder[F, Chunk[Byte]]
       .contramap[Json] { json =>
         val bytes = printer.printToByteBuffer(json)
@@ -52,7 +52,7 @@ trait PureharmHttp4sCirceInstances {
       .withContentType(`Content-Type`(org.http4s.MediaType.application.json))
       .contramap(t => Encoder[T].apply(t))
 
-  implicit def syncEntityJsonDecoder[F[_]: Sync, T: Decoder]: EntityDecoder[F, T] =
+  implicit def pureharmHttps4sSyncEntityJsonDecoder[F[_]: Sync, T: Decoder]: EntityDecoder[F, T] =
     circeInstances.jsonOf[F, T] //TODO: adaptErrorMessage
 
 }

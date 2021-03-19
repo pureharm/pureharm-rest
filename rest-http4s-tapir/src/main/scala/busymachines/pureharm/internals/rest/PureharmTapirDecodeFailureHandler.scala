@@ -35,7 +35,7 @@ object PureharmTapirDecodeFailureHandler {
   /** Used for reporting error messages when
     *
     * Note for devs:
-    * Use [[sttp.tapir.server.ServerDefaults.decodeFailureHandler]] as a reference
+    * Use sttp.tapir.server.ServerDefaults.decodeFailureHandler as a reference
     * on how and when to give "no match" responses. Otherwise, upon endpoints will
     * not be walked through to see which one matches.
     *
@@ -47,14 +47,14 @@ object PureharmTapirDecodeFailureHandler {
     *   There are values for the three out-of-the-box
     *
     * @param badRequestOnPathErrorIfPathShapeMatches
-    * from docs of [[sttp.tapir.server.ServerDefaults.FailureHandling#respondWithStatusCode]]
+    * from docs of sttp.tapir.server.ServerDefaults.FailureHandling#respondWithStatusCode
     * "Should a status 400 be returned if the shape of the path
-    * of the request matches, but decoding some path segment fails with a [[DecodeResult.Error]]."
+    * of the request matches, but decoding some path segment fails with a DecodeResult.Error."
     *
     * @param badRequestOnPathInvalidIfPathShapeMatches
-    * from docs of [[sttp.tapir.server.ServerDefaults.FailureHandling#respondWithStatusCode]]
+    * from docs of sttp.tapir.server.ServerDefaults.FailureHandling#respondWithStatusCode]]
     * "Should a status 400 be returned if the shape of the path
-    * of the request matches, but decoding some path segment fails with a [[DecodeResult.InvalidValue]]."
+    * of the request matches, but decoding some path segment fails with a DecodeResult.InvalidValue."
     */
   def handler(
     missingOrInvalidAuth:                      DecodeFailureContext => Option[DecodeFailureHandling] = noAuthHandler,

@@ -16,7 +16,7 @@
 
 package busymachines.pureharm.internals.rest
 
-import busymachines.pureharm.phantom._
+import busymachines.pureharm.sprout._
 import sttp.tapir
 
 /** @author Lorand Szakacs, https://github.com/lorandszakacs
@@ -45,14 +45,9 @@ object TapirOps {
   }
 
   final class CodecOps[Old](val c: tapir.Codec.PlainCodec[Old]) {
-
-    def haunt[PT](implicit p: SafeSpook[Throwable, Old, PT]): tapir.Codec.PlainCodec[PT] =
-      TapirCodecs.safePhantomTypePlainCodec[Old, PT](c, p)
-
     def sprout[New](implicit p: NewType[Old, New]): tapir.Codec.PlainCodec[New] = c.map[New](p.newType _)(p.oldType)
 
     def sproutRefined[New](implicit p: RefinedTypeThrow[Old, New]): tapir.Codec.PlainCodec[New] =
       TapirCodecs.refinedTypePlainCodec[Old, New](c, p)
-
   }
 }

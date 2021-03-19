@@ -17,8 +17,7 @@
 package busymachines.pureharm.internals.rest
 
 import scala.annotation.implicitNotFound
-import busymachines.pureharm.effects.{Concurrent, ContextShift, Timer}
-import busymachines.pureharm.internals.effects.BlockingShifter
+import busymachines.pureharm.effects._
 import sttp.tapir.server.http4s.Http4sServerOptions
 import sttp.tapir.server.{DecodeFailureContext, DecodeFailureHandling}
 
@@ -26,7 +25,7 @@ import sttp.tapir.server.{DecodeFailureContext, DecodeFailureHandling}
   * tapir Endpoints to http4s Route.
   *
   * This abstract class should be extended and the EffectType
-  * fixed. http4s needs at least [[]], but sometimes in your
+  * fixed. http4s needs at least Sync, but sometimes in your
   * specific app you might need a stronger constraint, and
   * you ought to define subclasses of this with stronger
   * constraints, and propagate those.

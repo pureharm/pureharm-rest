@@ -19,7 +19,7 @@ package busymachines.pureharm.internals.rest
 import sttp.tapir.{LowPrioritySchema, SchemaExtensions}
 import sttp.tapir.generic.internal.SchemaMagnoliaDerivation
 
-/** Mirrors: [[sttp.tapir.TapirAliases]] but it realiases Codec to TapirCodec
+/** Mirrors: sttp.tapir.TapirAliases but it realiases Codec to TapirCodec
   * because that conflicts with Circe's Codec, and that's way too annoying.
   */
 trait PureharmTapirAliases {

@@ -27,13 +27,14 @@ import org.http4s.server.blaze.BlazeServerBuilder
   */
 object TempRestMain extends PureharmIOApp {
 
-  override val ioRuntime: Later[(ContextShift[IO], Timer[IO])] = IORuntime.defaultMainRuntime("test-rest")
+  override val ioRuntime: Later[(ContextShift[IO], Timer[IO])] = pools.IORuntime.defaultMainRuntime("test-rest")
   import busymachines.pureharm.rest.temp.TempTapirEndpoints._
 
+  @scala.annotation.nowarn
   override def run(args: List[String]): IO[ExitCode] = {
     implicit val F: ConcurrentEffect[IO] = IO.ioConcurrentEffect(contextShift)
     for {
-      http4sPool <- UnsafePools.cached("htt4s").pure[IO]
+      http4sPool <- pools.UnsafePools.cached("htt4s").pure[IO]
       blockingShifter = BlockingShifter.fromExecutionContext[IO](http4sPool)(contextShift)
       implicit0(http4sRuntime: TestHttp4sRuntime[IO]) <-
         TestHttp4sRuntime[IO](blockingShifter)(F, timer).pure[IO]
