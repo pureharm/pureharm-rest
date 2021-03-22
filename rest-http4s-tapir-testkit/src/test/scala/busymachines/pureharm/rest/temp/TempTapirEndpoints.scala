@@ -80,7 +80,6 @@ object TempTapirEndpoints {
 
   //----- Create a unified way of doing auth, you can also add in common logic. See tapir docs for that
   val authedEndpoint: SimpleEndpoint[MyAuthToken, Unit] = {
-    import TempSproutCodecs._
     phEndpoint.in(auth.xCustomAuthHeader[MyAuthToken](AuthTokenHeaderName))
   }
 
@@ -110,7 +109,6 @@ object TempTapirEndpoints {
   trait MyAppRest[F[_]] extends RestDefs[F, Concurrent[F], TestHttp4sRuntime[F]]
 
   object SomeAPI {
-    import TempSproutCodecs._
 
     val nonAuthedGetEndpoint: SimpleEndpoint[Unit, MyOutputType] =
       phEndpoint.get

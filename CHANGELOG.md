@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # unreleased
 
+- add implicit resolution for tapir `PlainCodec`s for `Sprout`, and `SproutRefinedThrow` types.
+  previously these have been removed because compilation was exponentially bad, and inference bad
+  as well. Turns out, the trick was to put the `NewType` instance first in the implicit parameter list,
+  not second to greatly improve type inference. Which makes sense, there is only one such instance,
+  while there could be many other `PlainCodec` ones.
+
+  ```scala
+    implicit def pureharmSproutTypeGenericPlainCodec[Old, New](implicit
+    p: NewType[Old, New], // here
+    c: tapir.Codec.PlainCodec[Old], //not here
+  ): tapir.Codec.PlainCodec[New] = c.map[New](p.newType _)(p.oldType)
+  ```
+
 Version upgrades:
 - bump `pureharm-json-circe` to `0.1.1`
 

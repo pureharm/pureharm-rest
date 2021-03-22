@@ -25,8 +25,8 @@ import sttp.tapir
 object TapirCodecs {
 
   def refinedTypePlainCodec[Underlying, PT](implicit
-    tc: tapir.Codec.PlainCodec[Underlying],
     p:  RefinedTypeThrow[Underlying, PT],
+    tc: tapir.Codec.PlainCodec[Underlying],
   ): tapir.Codec.PlainCodec[PT] = {
     val m = tapir.Mapping.fromDecode[Underlying, PT](
       f = { u: Underlying =>

@@ -24,19 +24,29 @@ import sttp.tapir
   */
 trait PureharmSproutTypeRestTapirImplicits extends sttp.tapir.json.circe.TapirJsonCirce {
 
-  implicit def pureharmSproutTypeGenericSchema[Underlying, New: OldType[Underlying, *]](implicit
-    sc: tapir.Schema[Underlying]
+  implicit def pureharmSproutTypeGenericPlainCodec[Old, New](implicit
+    p: NewType[Old, New],
+    c: tapir.Codec.PlainCodec[Old],
+  ): tapir.Codec.PlainCodec[New] = c.map[New](p.newType _)(p.oldType)
+
+  implicit def pureharmSproutRefinedTypePlainCodec[Old, New](implicit
+    p: RefinedTypeThrow[Old, New],
+    c: tapir.Codec.PlainCodec[Old],
+  ): tapir.Codec.PlainCodec[New] = c.sproutRefined[New]
+
+  implicit def pureharmSproutTypeGenericSchema[Old, New: OldType[Old, *]](implicit
+    sc: tapir.Schema[Old]
   ): tapir.Schema[New] =
     sc.copy(description = sc.description match {
-      case None           => Option(OldType[Underlying, New].symbolicName)
-      case Some(original) => Option(s"$original — type name: ${OldType[Underlying, New].symbolicName}")
+      case None           => Option(OldType[Old, New].symbolicName)
+      case Some(original) => Option(s"$original — type name: ${OldType[Old, New].symbolicName}")
     }).asInstanceOf[tapir.Schema[New]]
 
   //---------------------------------------------------------------------------
 
-  implicit def pureharmSproutTypeGenericValidator[Underlying, PT: OldType[Underlying, *]](implicit
-    sc: tapir.Validator[Underlying]
-  ): tapir.Validator[PT] = sc.contramap(OldType[Underlying, PT].oldType)
+  implicit def pureharmSproutTypeGenericValidator[Old, PT: OldType[Old, *]](implicit
+    sc: tapir.Validator[Old]
+  ): tapir.Validator[PT] = sc.contramap(OldType[Old, PT].oldType)
 
   /** Basically, it's union of the schema of AnomalyBase and AnomaliesBase,
     * + any non-anomaly throwable is being wrapped in an UnhandledAnomaly

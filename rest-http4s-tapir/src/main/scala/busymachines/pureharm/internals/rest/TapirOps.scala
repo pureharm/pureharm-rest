@@ -48,6 +48,6 @@ object TapirOps {
     def sprout[New](implicit p: NewType[Old, New]): tapir.Codec.PlainCodec[New] = c.map[New](p.newType _)(p.oldType)
 
     def sproutRefined[New](implicit p: RefinedTypeThrow[Old, New]): tapir.Codec.PlainCodec[New] =
-      TapirCodecs.refinedTypePlainCodec[Old, New](c, p)
+      TapirCodecs.refinedTypePlainCodec[Old, New](p, c)
   }
 }
