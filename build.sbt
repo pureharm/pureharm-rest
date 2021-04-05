@@ -112,14 +112,13 @@ lazy val `rest-http4s-tapir` = project
   .settings(
     name := "pureharm-rest-http4s-tapir",
     libraryDependencies ++= Seq(  
-      "com.busymachines" %%% "pureharm-core-anomaly" % pureharmCoreV withSources(),
-      "com.busymachines" %%% "pureharm-core-sprout" % pureharmCoreV withSources(),
-      "com.busymachines" %%% "pureharm-effects-cats" % pureharmEffectsV withSources(),
-      "com.busymachines" %%% "pureharm-json-circe" % pureharmJSONV withSources(),
+      "com.busymachines" %% "pureharm-core-anomaly" % pureharmCoreV withSources(),
+      "com.busymachines" %% "pureharm-core-sprout" % pureharmCoreV withSources(),
+      "com.busymachines" %% "pureharm-effects-cats" % pureharmEffectsV withSources(),
+      "com.busymachines" %% "pureharm-json-circe" % pureharmJSONV withSources(),
 
       "org.http4s" %% "http4s-dsl"          % http4sV withSources (),
       "org.http4s" %% "http4s-circe"        % http4sV withSources (),
-      "org.http4s" %% "http4s-blaze-server" % http4sV withSources (),
 
       "com.softwaremill.sttp.tapir" %% "tapir-core"               % tapirV withSources (),
       "com.softwaremill.sttp.tapir" %% "tapir-json-circe"         % tapirV withSources (),
@@ -135,11 +134,10 @@ lazy val `rest-http4s-tapir-testkit` = project
   .settings(
     name := "pureharm-rest-http4s-tapir",
     libraryDependencies ++= Seq(  
-      "com.busymachines" %%% "pureharm-testkit" % pureharmTestkitV withSources(),
-      
-
-      "org.typelevel" %%% "log4cats-core" % log4catsV % Test withSources(),
-      "org.typelevel" %%% "log4cats-slf4j" % log4catsV % Test withSources(),
+      "com.busymachines" %% "pureharm-testkit" % pureharmTestkitV withSources(),
+      "org.http4s" %% "http4s-blaze-server" % http4sV % Test withSources (),
+      "org.typelevel" %% "log4cats-core" % log4catsV % Test withSources(),
+      "org.typelevel" %% "log4cats-slf4j" % log4catsV % Test withSources(),
     ),
   ).dependsOn(
     `rest-http4s-tapir`
@@ -150,6 +148,8 @@ lazy val `rest-http4s-tapir-testkit` = project
 //=============================================================================
 
 lazy val commonSettings = Seq(
+  testFrameworks += new TestFramework("munit.Framework"),
+
   Compile / unmanagedSourceDirectories ++= {
     val major = if (isDotty.value) "-3" else "-2"
     List(CrossType.Pure, CrossType.Full).flatMap(
