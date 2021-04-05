@@ -19,7 +19,6 @@ package busymachines.pureharm.rest.temp
 import busymachines.pureharm.rest._
 import busymachines.pureharm.json._
 import busymachines.pureharm.json.implicits._
-import ShowThrowable._
 
 /** @author Lorand Szakacs, https://github.com/lorandszakacs
   * @since 10 Jul 2020
