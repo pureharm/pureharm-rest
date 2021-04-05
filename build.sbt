@@ -89,7 +89,7 @@ val pureharmCoreV        = "0.2.0"      //https://github.com/busymachines/pureha
 val pureharmEffectsV     = "0.2.0"      //https://github.com/busymachines/pureharm-effects-cats/releases
 val pureharmJSONV        = "0.2.0"      //https://github.com/busymachines/pureharm-json-circe/releases
 val pureharmTestkitV     = "0.2.0"      //https://github.com/busymachines/pureharm-testkit/releases
-val http4sV              = "0.21.20"    //https://github.com/http4s/http4s/releases
+val http4sV              = "0.21.21"    //https://github.com/http4s/http4s/releases
 val tapirV               = "0.17.19"    //https://github.com/softwaremill/tapir/releases
 val log4catsV            = "1.2.2"      //https://github.com/typelevel/log4cats/releases
 // format: on
