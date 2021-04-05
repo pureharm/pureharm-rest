@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # unreleased
 
+# 0.3.0
+
+### dependency upgrades
+
+- [http4s](https://github.com/http4s/http4s/releases) `0.21.21`
+- [pureharm-core-anomaly](https://github.com/busymachines/pureharm-core/releases) `0.2.0`
+- [pureharm-core-sprout](https://github.com/busymachines/pureharm-core/releases) `0.2.0`
+- [pureharm-effects-cats](https://github.com/busymachines/pureharm-effects-cats/releases) `0.2.0`
+- [pureharm-json-circe](https://github.com/busymachines/pureharm-json-circe/releases) `0.2.0`
+- [pureharm-testkit](https://github.com/busymachines/pureharm-testkit/releases) `0.2.0`
+
 # 0.2.0
 
 - add implicit resolution for tapir `PlainCodec`s for `Sprout`, and `SproutRefinedThrow` types.
@@ -30,7 +41,7 @@ Version upgrades:
 
 Split out from [pureharm](https://github.com/busymachines/pureharm) as of version `0.0.7`.
 
-Upgrades:
+### dependency upgrades
 
 - upgrade tapir to `0.17.19`
 - upgrade to pureharm `0.1.0` series + drop phantom type support.
