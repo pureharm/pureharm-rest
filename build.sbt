@@ -88,7 +88,7 @@ ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
 val pureharmCoreV        = "0.2.0"      //https://github.com/busymachines/pureharm-core/releases
 val pureharmEffectsV     = "0.2.0"      //https://github.com/busymachines/pureharm-effects-cats/releases
 val pureharmJSONV        = "0.2.0"      //https://github.com/busymachines/pureharm-json-circe/releases
-val pureharmTestkitV     = "0.2.0"      //https://github.com/busymachines/pureharm-testkit/releases
+val pureharmTestkitV     = "0.3.0"      //https://github.com/busymachines/pureharm-testkit/releases
 val http4sV              = "0.21.21"    //https://github.com/http4s/http4s/releases
 val tapirV               = "0.17.19"    //https://github.com/softwaremill/tapir/releases
 val log4catsV            = "1.2.2"      //https://github.com/typelevel/log4cats/releases
@@ -148,8 +148,6 @@ lazy val `rest-http4s-tapir-testkit` = project
 //=============================================================================
 
 lazy val commonSettings = Seq(
-  testFrameworks += new TestFramework("munit.Framework"),
-
   Compile / unmanagedSourceDirectories ++= {
     val major = if (isDotty.value) "-3" else "-2"
     List(CrossType.Pure, CrossType.Full).flatMap(
