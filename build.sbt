@@ -86,7 +86,7 @@ ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
 
 // format: off
 val pureharmCoreV        = "0.2.0"      //https://github.com/busymachines/pureharm-core/releases
-val pureharmEffectsV     = "0.2.0"      //https://github.com/busymachines/pureharm-effects-cats/releases
+val pureharmEffectsV     = "0.4.0"      //https://github.com/busymachines/pureharm-effects-cats/releases
 val pureharmJSONV        = "0.2.0"      //https://github.com/busymachines/pureharm-json-circe/releases
 val pureharmTestkitV     = "0.3.0"      //https://github.com/busymachines/pureharm-testkit/releases
 val http4sV              = "0.21.21"    //https://github.com/http4s/http4s/releases
@@ -112,19 +112,19 @@ lazy val `rest-http4s-tapir` = project
   .settings(
     name := "pureharm-rest-http4s-tapir",
     libraryDependencies ++= Seq(  
-      "com.busymachines" %% "pureharm-core-anomaly" % pureharmCoreV withSources(),
-      "com.busymachines" %% "pureharm-core-sprout" % pureharmCoreV withSources(),
-      "com.busymachines" %% "pureharm-effects-cats" % pureharmEffectsV withSources(),
-      "com.busymachines" %% "pureharm-json-circe" % pureharmJSONV withSources(),
-
-      "org.http4s" %% "http4s-dsl"          % http4sV withSources (),
-      "org.http4s" %% "http4s-circe"        % http4sV withSources (),
-
-      "com.softwaremill.sttp.tapir" %% "tapir-core"               % tapirV withSources (),
-      "com.softwaremill.sttp.tapir" %% "tapir-json-circe"         % tapirV withSources (),
-      "com.softwaremill.sttp.tapir" %% "tapir-http4s-server"      % tapirV withSources (),
-      "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs"       % tapirV withSources (),
-      "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml" % tapirV withSources (),
+      // format: off
+      "org.http4s"                    %% "http4s-dsl"                 % http4sV             withSources(),
+      "org.http4s"                    %% "http4s-circe"               % http4sV             withSources(),
+      "com.busymachines"              %% "pureharm-core-anomaly"      % pureharmCoreV       withSources(),
+      "com.busymachines"              %% "pureharm-core-sprout"       % pureharmCoreV       withSources(),
+      "com.busymachines"              %% "pureharm-effects-cats"      % pureharmEffectsV    withSources(),
+      "com.busymachines"              %% "pureharm-json-circe"        % pureharmJSONV       withSources(),
+      "com.softwaremill.sttp.tapir"   %% "tapir-core"                 % tapirV              withSources(),
+      "com.softwaremill.sttp.tapir"   %% "tapir-json-circe"           % tapirV              withSources(),
+      "com.softwaremill.sttp.tapir"   %% "tapir-http4s-server"        % tapirV              withSources(),
+      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-docs"         % tapirV              withSources(),
+      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-circe-yaml"   % tapirV              withSources(),
+      // format: on
     ),
   )
 
@@ -134,10 +134,12 @@ lazy val `rest-http4s-tapir-testkit` = project
   .settings(
     name := "pureharm-rest-http4s-tapir",
     libraryDependencies ++= Seq(  
-      "com.busymachines" %% "pureharm-testkit" % pureharmTestkitV withSources(),
-      "org.http4s" %% "http4s-blaze-server" % http4sV % Test withSources (),
-      "org.typelevel" %% "log4cats-core" % log4catsV % Test withSources(),
-      "org.typelevel" %% "log4cats-slf4j" % log4catsV % Test withSources(),
+      // format: on
+      "com.busymachines"    %% "pureharm-testkit"     % pureharmTestkitV      withSources(),
+      "org.http4s"          %% "http4s-blaze-server"  % http4sV     % Test    withSources(),
+      "org.typelevel"       %% "log4cats-core"        % log4catsV   % Test    withSources(),
+      "org.typelevel"       %% "log4cats-slf4j"       % log4catsV   % Test    withSources(),
+      // format: off
     ),
   ).dependsOn(
     `rest-http4s-tapir`
