@@ -32,7 +32,7 @@ val Scala3RC1 = "3.0.0-RC1"
 //see: https://github.com/xerial/sbt-sonatype#buildsbt
 ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
 
-ThisBuild / baseVersion  := "0.3"
+ThisBuild / baseVersion  := "0.4"
 ThisBuild / organization := "com.busymachines"
 ThisBuild / organizationName := "BusyMachines"
 ThisBuild / homepage     := Option(url("https://github.com/busymachines/pureharm-testkit"))
@@ -122,8 +122,6 @@ lazy val `rest-http4s-tapir` = project
       "com.softwaremill.sttp.tapir"   %% "tapir-core"                 % tapirV              withSources(),
       "com.softwaremill.sttp.tapir"   %% "tapir-json-circe"           % tapirV              withSources(),
       "com.softwaremill.sttp.tapir"   %% "tapir-http4s-server"        % tapirV              withSources(),
-      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-docs"         % tapirV              withSources(),
-      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-circe-yaml"   % tapirV              withSources(),
       // format: on
     ),
   )
@@ -131,14 +129,17 @@ lazy val `rest-http4s-tapir` = project
 
 lazy val `rest-http4s-tapir-testkit` = project
   .settings(commonSettings)
+  .enablePlugins(NoPublishPlugin)
   .settings(
     name := "pureharm-rest-http4s-tapir",
     libraryDependencies ++= Seq(  
       // format: on
-      "com.busymachines"    %% "pureharm-testkit"     % pureharmTestkitV      withSources(),
-      "org.http4s"          %% "http4s-blaze-server"  % http4sV     % Test    withSources(),
-      "org.typelevel"       %% "log4cats-core"        % log4catsV   % Test    withSources(),
-      "org.typelevel"       %% "log4cats-slf4j"       % log4catsV   % Test    withSources(),
+      "com.busymachines"              %% "pureharm-testkit"           % pureharmTestkitV      withSources(),
+      "org.http4s"                    %% "http4s-blaze-server"        % http4sV     % Test    withSources(),
+      "org.typelevel"                 %% "log4cats-core"              % log4catsV   % Test    withSources(),
+      "org.typelevel"                 %% "log4cats-slf4j"             % log4catsV   % Test    withSources(),
+      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-docs"         % tapirV      % Test    withSources(),
+      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-circe-yaml"   % tapirV      % Test    withSources(),
       // format: off
     ),
   ).dependsOn(

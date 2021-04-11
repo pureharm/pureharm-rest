@@ -10,7 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### dependency upgrades
 
 # 0.3.0
+
 - [pureharm-testkit](https://github.com/busymachines/pureharm-testkit/releases) `0.3.0`
+- [pureharm-effects-cats](https://github.com/busymachines/pureharm-effects-cats/releases) `0.4.0`
 
 ### dependency upgrades
 
