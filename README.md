@@ -15,7 +15,6 @@ See [changelog](./CHANGELOG.md).
 
 - `"com.busymachines" %% "pureharm-endpoints-docs-tapir" % "0.5.0`
 
-  - `pureharm-endpoint-tapir`
   - [tapir-openapi-docs](https://github.com/softwaremill/tapir/releases) `0.17.19`
   - [tapir-openapi-circe-yaml](https://github.com/softwaremill/tapir/releases) `0.17.19`
 

@@ -145,12 +145,6 @@ lazy val `route-http4s` = project
     libraryDependencies ++= Seq(
       // format: off
       "org.http4s"                    %% "http4s-dsl"                 % http4sV             withSources(),
-      "com.busymachines"              %% "pureharm-core-anomaly"      % pureharmCoreV       withSources(),
-      "com.busymachines"              %% "pureharm-core-sprout"       % pureharmCoreV       withSources(),
-      "com.busymachines"              %% "pureharm-effects-cats"      % pureharmEffectsV    withSources(),
-      "com.busymachines"              %% "pureharm-json-circe"        % pureharmJSONV       withSources(),
-      "com.softwaremill.sttp.tapir"   %% "tapir-core"                 % tapirV              withSources(),
-      "com.softwaremill.sttp.tapir"   %% "tapir-json-circe"           % tapirV              withSources(),
       "com.softwaremill.sttp.tapir"   %% "tapir-http4s-server"        % tapirV              withSources(),
       // format: on
     ),
