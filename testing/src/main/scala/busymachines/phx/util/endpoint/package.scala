@@ -18,10 +18,7 @@ package busymachines.phx.util
 
 import busymachines.pureharm.{endpoint => phend}
 
-package object endpoint
-  extends sttp.tapir.Tapir with phend.aliases.PureharmTapirAliases with phend.aliases.PureharmTapirModelAliases
-  with phend.aliases.PureharmTapirServerAliases with phend.PureharmSproutTypeRestTapirImplicits {
-
+package object endpoint extends phend.PureharmEndpointAllTypeAliases with phend.PureharmEndpointAllImplicits {
   /** The base endpoint in all our apps
     */
   val testEndpoint: SimpleEndpoint[Unit, Unit] = phend.PureharmTapirEndpoint.phEndpoint

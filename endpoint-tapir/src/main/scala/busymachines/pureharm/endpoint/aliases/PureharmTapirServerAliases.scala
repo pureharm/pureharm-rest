@@ -16,29 +16,25 @@
 
 package busymachines.pureharm.endpoint.aliases
 
+import sttp.tapir.server
+
 /** @author Lorand Szakacs, https://github.com/lorandszakacs
   * @since 16 Jul 2020
   */
 trait PureharmTapirServerAliases {
-  type DecodeFailureHandling = sttp.tapir.server.DecodeFailureHandling
-  val DecodeFailureHandling: sttp.tapir.server.DecodeFailureHandling.type = sttp.tapir.server.DecodeFailureHandling
+  type DecodeFailureHandling = server.DecodeFailureHandling
+  val DecodeFailureHandling: server.DecodeFailureHandling.type = server.DecodeFailureHandling
 
-  type DecodeFailureContext = sttp.tapir.server.DecodeFailureContext
-  val DecodeFailureContext: sttp.tapir.server.DecodeFailureContext.type = sttp.tapir.server.DecodeFailureContext
+  type DecodeFailureContext = server.DecodeFailureContext
+  val DecodeFailureContext: server.DecodeFailureContext.type = server.DecodeFailureContext
 
   type DecodeFailureHandler = DecodeFailureContext => DecodeFailureHandling
 
-  val ServerDefaults: sttp.tapir.server.ServerDefaults.type = sttp.tapir.server.ServerDefaults
+  val ServerDefaults: server.ServerDefaults.type = server.ServerDefaults
 
-  type ServerEndpoint[I, E, O, -R, F[_]]               = sttp.tapir.server.ServerEndpoint[I, E, O, R, F]
-  type PartialServerEndpoint[U, I, E, O, -R, F[_]]     = sttp.tapir.server.PartialServerEndpoint[U, I, E, O, R, F]
-  type ServerEndpointInParts[U, IR, I, E, O, -R, F[_]] = sttp.tapir.server.ServerEndpointInParts[U, IR, I, E, O, R, F]
+  type ServerEndpoint[I, E, O, -R, F[_]]               = server.ServerEndpoint[I, E, O, R, F]
+  type PartialServerEndpoint[U, I, E, O, -R, F[_]]     = server.PartialServerEndpoint[U, I, E, O, R, F]
+  type ServerEndpointInParts[U, IR, I, E, O, -R, F[_]] = server.ServerEndpointInParts[U, IR, I, E, O, R, F]
 
-  type SimpleServerEndpoint[I, O, F[_]] = sttp.tapir.server.ServerEndpoint[I, Throwable, O, Nothing, F]
-
-  // TODO: move to rest module
-  // type Http4sServerOptions[F[_]] = sttp.tapir.server.http4s.Http4sServerOptions[F]
-
-  // val Http4sServerOptions: sttp.tapir.server.http4s.Http4sServerOptions.type =
-  //   sttp.tapir.server.http4s.Http4sServerOptions
+  type SimpleServerEndpoint[I, O, F[_]] = server.ServerEndpoint[I, Throwable, O, Nothing, F]
 }

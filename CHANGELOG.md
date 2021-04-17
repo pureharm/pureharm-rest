@@ -29,12 +29,15 @@ the library as before.
 - remove `Http4sRoutes`, `RestDefs` from `PureharmRouteTypeAliases` (formerly `PureharmRestHttp4sTypeAliases`), see deprecations section
 
 #### deprecations
+
 - deprecate `PureharmRestHttp4sTypeAliases` in favor of `PureharmRouteTypeAliases`
 - deprecate `RestDefs` in favor of `Http4sRoutes`, they are source compatible.
 
 ### new features
+
 - add `PureharmRouteAllImplicits` trait to `pureharm-route-http4s-tapir`
 - add `fromEnpoint` helper function in `RestDefs`
+- add `PureharmEndpointAllTypeAliases`, `PureharmEndpointAllImplicits` mixin traits to `pureharm-endpoint-tapir`
 
 # 0.4.0
 

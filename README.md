@@ -4,7 +4,7 @@ See [changelog](./CHANGELOG.md).
 
 ## modules
 
-- `"com.busymachines" %% "pureharm-endpoint-tapir" % "0.5.0`
+- `"com.busymachines" %% "pureharm-endpoint-tapir" % "0.5.0-M1`
 
   - [tapir-core](https://github.com/softwaremill/tapir/releases) `0.17.19`
   - [tapir-json-circe](https://github.com/softwaremill/tapir/releases) `0.17.19`
@@ -13,18 +13,18 @@ See [changelog](./CHANGELOG.md).
   - [pureharm-json-circe](https://github.com/busymachines/pureharm-json-circe/releases) `0.2.0`
   - [pureharm-effects-cats](https://github.com/busymachines/pureharm-effects-cats/releases) `0.4.0`
 
-- `"com.busymachines" %% "pureharm-endpoints-docs-tapir" % "0.5.0`
+- `"com.busymachines" %% "pureharm-endpoints-docs-tapir" % "0.5.0-M1`
 
   - [tapir-openapi-docs](https://github.com/softwaremill/tapir/releases) `0.17.19`
   - [tapir-openapi-circe-yaml](https://github.com/softwaremill/tapir/releases) `0.17.19`
 
-- `"com.busymachines" %% "pureharm-route-http4s-tapir" % "0.5.0`
+- `"com.busymachines" %% "pureharm-route-http4s-tapir" % "0.5.0-M1`
 
   - `pureharm-endpoint-tapir`
   - [http4s-dsl](https://github.com/http4s/http4s/releases) `0.21.22`
   - [tapir-http4s-server](https://github.com/softwaremill/tapir/releases) `0.17.19`
 
-- `"com.busymachines" %% "pureharm-server-http4s" % "0.5.0`
+- `"com.busymachines" %% "pureharm-server-http4s" % "0.5.0-M1`
   - [pureharm-effects-cats](https://github.com/busymachines/pureharm-effects-cats/releases) `0.4.0`
   - [http4s-blaze-server](https://github.com/http4s/http4s/releases) `0.21.22`
 

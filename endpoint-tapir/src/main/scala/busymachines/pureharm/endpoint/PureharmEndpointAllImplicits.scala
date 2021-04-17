@@ -1,0 +1,3 @@
+package busymachines.pureharm.endpoint
+
+trait PureharmEndpointAllImplicits extends PureharmSproutTypeRestTapirImplicits
