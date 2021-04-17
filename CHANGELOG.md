@@ -26,6 +26,7 @@ the library as before.
 #### source changes
 
 ### new features
+
 - add `fromEnpoint` helper function in `RestDefs`
 
 # 0.4.0

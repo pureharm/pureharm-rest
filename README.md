@@ -30,7 +30,9 @@ See [changelog](./CHANGELOG.md).
 
 ## usage
 
-Under construction. See [release notes](https://github.com/busymachines/pureharm-rest/releases) and tests for examples.
+See [`testing`](./testing) for a pretty much full-fledged example on how to use the modules.
+
+Still under construction. See [release notes](https://github.com/busymachines/pureharm-rest/releases) and tests for examples.
 
 ## Copyright and License
 
