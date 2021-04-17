@@ -129,7 +129,7 @@ lazy val `endpoint-tapir` = project
 lazy val `endpoint-docs-tapir` = project
   .settings(commonSettings)
   .settings(
-    name := "pureharm-endpoints-tapir-docs",
+    name := "pureharm-endpoint-docs-tapir",
     libraryDependencies ++= Seq(
       // format: off
       "com.softwaremill.sttp.tapir"   %% "tapir-openapi-docs"          % tapirV       withSources(),

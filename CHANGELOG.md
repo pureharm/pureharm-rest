@@ -16,7 +16,7 @@ the library as before.
 
 - `"com.busymachines" %% "pureharm-endpoint-tapir"`
   - now contains everything `tapir` related needed to define `Endpoint`s, sans dependency on `http4s`
-- `"com.busymachines" %% "pureharm-endpoints-docs-tapir"`
+- `"com.busymachines" %% "pureharm-endpoint-docs-tapir"`
   - contains a simple helper method to print out YAML representation of OpenAPI
 - `"com.busymachines" %% "pureharm-route-http4s-tapir"`
   - contains everything `http4s` related, and required to transform `tapir` endpoints into `http4s` routes

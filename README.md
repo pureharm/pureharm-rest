@@ -13,7 +13,7 @@ See [changelog](./CHANGELOG.md).
   - [pureharm-json-circe](https://github.com/busymachines/pureharm-json-circe/releases) `0.2.0`
   - [pureharm-effects-cats](https://github.com/busymachines/pureharm-effects-cats/releases) `0.4.0`
 
-- `"com.busymachines" %% "pureharm-endpoints-docs-tapir" % "0.5.0-M1`
+- `"com.busymachines" %% "pureharm-endpoint-docs-tapir" % "0.5.0-M1`
 
   - [tapir-openapi-docs](https://github.com/softwaremill/tapir/releases) `0.17.19`
   - [tapir-openapi-circe-yaml](https://github.com/softwaremill/tapir/releases) `0.17.19`
