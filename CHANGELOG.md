@@ -25,12 +25,15 @@ the library as before.
 
 #### source changes
 
-#### deprecations
+- remove `PureharmHttp4sCirceInstances.pureharmHttps4sEntityJsonDecoder`, and drop dependency on `http4s-circe` because it was essentially unused.
+- remove `Http4sRoutes`, `RestDefs` from `PureharmRouteTypeAliases` (formerly `PureharmRestHttp4sTypeAliases`), see deprecations section
 
+#### deprecations
+- deprecate `PureharmRestHttp4sTypeAliases` in favor of `PureharmRouteTypeAliases`
 - deprecate `RestDefs` in favor of `Http4sRoutes`, they are source compatible.
 
 ### new features
-
+- add `PureharmRouteAllImplicits` trait to `pureharm-route-http4s-tapir`
 - add `fromEnpoint` helper function in `RestDefs`
 
 # 0.4.0

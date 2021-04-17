@@ -16,6 +16,7 @@
 
 package busymachines.phx.util.route
 
+import busymachines.pureharm.route
 import busymachines.phx.util.endpoint._
 import busymachines.pureharm.effects._
 
@@ -25,7 +26,7 @@ final class PhxHttp4sRuntime[F[_]](
 )(implicit
   override val F:               Concurrent[F],
   override val timer:           Timer[F],
-) extends Http4sRuntime[F, Concurrent[F]] {
+) extends route.Http4sRuntime[F, Concurrent[F]] {
 
   override val http4sServerOptions: Http4sServerOptions[F] =
     super.http4sServerOptions.withCustomHeaderAuthValidation(CustomHeaders.`X-AUTH-TOKEN`.toString)

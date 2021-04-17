@@ -17,12 +17,5 @@
 package busymachines.phx.util
 
 import busymachines.pureharm.route
-import org.http4s.syntax
 
-package object route
-  extends route.PureharmRestHttp4sTypeAliases with syntax.AllSyntax with syntax.KleisliSyntaxBinCompat0
-  with syntax.KleisliSyntaxBinCompat1 {
-
-  // TODO: move to aliases
-  val Router: org.http4s.server.Router.type = org.http4s.server.Router
-}
+package object route extends route.PureharmRouteTypeAliases with route.PureharmRouteAllImplicits

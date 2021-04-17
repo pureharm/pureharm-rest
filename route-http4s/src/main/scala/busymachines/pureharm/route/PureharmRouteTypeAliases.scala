@@ -16,13 +16,13 @@
 
 package busymachines.pureharm.route
 
-import busymachines.pureharm.effects.Concurrent
 import org.http4s
+import sttp.tapir.server.{http4s => thttp4s}
 
 /** @author Lorand Szakacs, https://github.com/lorandszakacs
   * @since 10 Jul 2020
   */
-trait PureharmRestHttp4sTypeAliases {
+trait PureharmRouteTypeAliases {
   type HttpApp[F[_]] = http4s.HttpApp[F]
   val HttpApp: http4s.HttpApp.type = http4s.HttpApp
 
@@ -32,18 +32,8 @@ trait PureharmRestHttp4sTypeAliases {
   type Http4sDsl[F[_]] = http4s.dsl.Http4sDsl[F]
   val Http4sDsl: http4s.dsl.Http4sDsl.type = http4s.dsl.Http4sDsl
 
-  type Http4sRuntime[F[_], EffectType <: Concurrent[F]] =
-    busymachines.pureharm.route.Http4sRuntime[F, EffectType]
+  type Http4sServerOptions[F[_]] = thttp4s.Http4sServerOptions[F]
+  val Http4sServerOptions: thttp4s.Http4sServerOptions.type = thttp4s.Http4sServerOptions
 
-  type Http4sRoutes[F[_], ET <: Concurrent[F], RT <: Http4sRuntime[F, ET]] =
-    busymachines.pureharm.route.Http4sRoutes[F, ET, RT]
-
-  @scala.deprecated("Use Http4sRoutes instead. Otherwise it's source compatible", "0.5.0")
-  type RestDefs[F[_], ET <: Concurrent[F], RT <: Http4sRuntime[F, ET]] =
-    busymachines.pureharm.route.Http4sRoutes[F, ET, RT]
-
-  type Http4sServerOptions[F[_]] = sttp.tapir.server.http4s.Http4sServerOptions[F]
-
-  val Http4sServerOptions: sttp.tapir.server.http4s.Http4sServerOptions.type =
-    sttp.tapir.server.http4s.Http4sServerOptions
+  val Router: org.http4s.server.Router.type = org.http4s.server.Router
 }
