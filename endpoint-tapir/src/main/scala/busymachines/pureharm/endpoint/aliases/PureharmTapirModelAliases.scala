@@ -37,6 +37,19 @@ trait PureharmTapirModelAliases {
   type MediaType = sttp.model.MediaType
   val MediaType: sttp.model.MediaType.type = sttp.model.MediaType
 
+  type Part[+T] = sttp.model.Part[T]
+  val Part: sttp.model.Part.type = sttp.model.Part
+
+  type Validator[T] = sttp.tapir.Validator[T]
+  val Validator: sttp.tapir.Validator.type = sttp.tapir.Validator
+
+  type TapirURI = sttp.model.Uri
+  val TapirURI: sttp.model.Uri.type = sttp.model.Uri
+
+  @scala.deprecated("Use TapirUri instead", "0.5.0")
   type Uri = sttp.model.Uri
+
+  @scala.deprecated("Use TapirUri instead", "0.5.0")
   val Uri: sttp.model.Uri.type = sttp.model.Uri
+
 }
