@@ -23,9 +23,10 @@ import busymachines.phx.util.route._
 import busymachines.phx.domain._
 import busymachines.phx.domain.organizer.PhxOrganizer
 
-final class PhxRoutes[F[_]](phxOrganizer: PhxOrganizer[F])(implicit rt: PhxHttp4sRuntime[F]) extends PhxHttp4sRoutes[F] {
+final class PhxRoutes[F[_]](phxOrganizer: PhxOrganizer[F])(implicit rt: PhxHttp4sRuntime[F])
+  extends PhxHttp4sRoutes[F] {
 
-  val nonAuthedGetRoute: HttpRoutes[F] = http4sServer.toRouteRecoverErrors(PhxEndpoints.nonAuthedGetEndpoint) { _ =>
+  val nonAuthedGetRoute: HttpRoutes[F] = fromEndpoint(PhxEndpoints.nonAuthedGetEndpoint) { _ =>
     for {
       rid    <- PHUUID.generate[F]
       rtoken <- MyAuthToken.generate[F]
@@ -33,34 +34,31 @@ final class PhxRoutes[F[_]](phxOrganizer: PhxOrganizer[F])(implicit rt: PhxHttp4
     } yield result
   }
 
-  val nonAuthedPostRoute: HttpRoutes[F] = http4sServer.toRouteRecoverErrors(PhxEndpoints.nonAuthedPostEndpoint) {
-    myInputType: MyInputType =>
-      for {
-        rtoken <- MyAuthToken.generate[F]
-        result <- phxOrganizer.postLogic(myInputType)(rtoken)
-      } yield result
+  val nonAuthedPostRoute: HttpRoutes[F] = fromEndpoint(PhxEndpoints.nonAuthedPostEndpoint) { myInputType: MyInputType =>
+    for {
+      rtoken <- MyAuthToken.generate[F]
+      result <- phxOrganizer.postLogic(myInputType)(rtoken)
+    } yield result
   }
 
-  val testGetRoute: HttpRoutes[F] = http4sServer.toRouteRecoverErrors(PhxEndpoints.testGetEndpoint) {
-    t: (MyAuthToken, PHUUID) =>
-      val (auth, ph) = t
-      for {
-        result <- phxOrganizer.getLogic(ph)(auth)
-      } yield result
+  val testGetRoute: HttpRoutes[F] = fromEndpoint(PhxEndpoints.testGetEndpoint) { t: (MyAuthToken, PHUUID) =>
+    val (auth, ph) = t
+    for {
+      result <- phxOrganizer.getLogic(ph)(auth)
+    } yield result
   }
 
   val testGetEndpointQueryParamsRoute: HttpRoutes[F] =
-    http4sServer.toRouteRecoverErrors(PhxEndpoints.testGetEndpointQueryParams) {
-      t: (MyAuthToken, PHUUID, PHLong, Option[PHInt]) =>
-        val (auth, ph, longParam, intOpt) = t
-        for {
-          _      <- F.delay[Unit](println(s"params: $longParam --- $intOpt"))
-          result <- phxOrganizer.getLogic(ph)(auth)
-        } yield result
+    fromEndpoint(PhxEndpoints.testGetEndpointQueryParams) { t: (MyAuthToken, PHUUID, PHLong, Option[PHInt]) =>
+      val (auth, ph, longParam, intOpt) = t
+      for {
+        _      <- F.delay[Unit](println(s"params: $longParam --- $intOpt"))
+        result <- phxOrganizer.getLogic(ph)(auth)
+      } yield result
     }
 
   val testGetWithHeaderRoute: HttpRoutes[F] =
-    http4sServer.toRouteRecoverErrors(PhxEndpoints.testGetWithHeaderEndpoint) { t: (MyAuthToken, PHUUID, PHHeader) =>
+    fromEndpoint(PhxEndpoints.testGetWithHeaderEndpoint) { t: (MyAuthToken, PHUUID, PHHeader) =>
       val (auth, ph, header) = t
       for {
         _      <- F.delay[Unit](println(s"header: $header"))
@@ -68,13 +66,12 @@ final class PhxRoutes[F[_]](phxOrganizer: PhxOrganizer[F])(implicit rt: PhxHttp4
       } yield result
     }
 
-  val testPostRoute: HttpRoutes[F] = http4sServer.toRouteRecoverErrors(PhxEndpoints.testPostEndpoint) {
-    t: (MyAuthToken, MyInputType) =>
-      val (auth, myInputType) = t
-      for {
-        _      <- F.delay[Unit](println(s"testPostRoute"))
-        result <- phxOrganizer.postLogic(myInputType)(auth)
-      } yield result
+  val testPostRoute: HttpRoutes[F] = fromEndpoint(PhxEndpoints.testPostEndpoint) { t: (MyAuthToken, MyInputType) =>
+    val (auth, myInputType) = t
+    for {
+      _      <- F.delay[Unit](println(s"testPostRoute"))
+      result <- phxOrganizer.postLogic(myInputType)(auth)
+    } yield result
 
   }
 

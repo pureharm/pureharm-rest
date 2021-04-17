@@ -17,6 +17,10 @@
 package busymachines.pureharm.route
 
 import busymachines.pureharm.effects.{BlockingShifter, Concurrent, ContextShift, Timer}
+import org.http4s.HttpRoutes
+import sttp.capabilities.WebSockets
+import sttp.capabilities.fs2.Fs2Streams
+import sttp.tapir.Endpoint
 import sttp.tapir.server.http4s.{Http4sServerInterpreter, Http4sServerOptions}
 
 /**
@@ -24,11 +28,16 @@ import sttp.tapir.server.http4s.{Http4sServerInterpreter, Http4sServerOptions}
 trait RestDefs[F[_], ET <: Concurrent[F], RT <: Http4sRuntime[F, ET]] {
 
   protected def http4sRuntime: RT
-  implicit def F:               ET                 = http4sRuntime.F
-  implicit def blockingShifter: BlockingShifter[F] = http4sRuntime.blockingShifter
-  implicit def contextShift:    ContextShift[F]    = http4sRuntime.contextShift
-  implicit def timer:           Timer[F]           = http4sRuntime.timer
+  implicit protected def F:               ET                 = http4sRuntime.F
+  implicit protected def blockingShifter: BlockingShifter[F] = http4sRuntime.blockingShifter
+  implicit protected def contextShift:    ContextShift[F]    = http4sRuntime.contextShift
+  implicit protected def timer:           Timer[F]           = http4sRuntime.timer
 
-  implicit def tapirHttp4Ops: Http4sServerOptions[F]  = http4sRuntime.http4sServerOptions
-  implicit val http4sServer:  Http4sServerInterpreter = Http4sServerInterpreter
+  implicit protected def tapirHttp4Ops: Http4sServerOptions[F]  = http4sRuntime.http4sServerOptions
+  implicit protected val http4sServer:  Http4sServerInterpreter = Http4sServerInterpreter
+
+  protected def fromEndpoint[I, O](
+    e: Endpoint[I, Throwable, O, Fs2Streams[F] with WebSockets]
+  )(f: I => F[O]): HttpRoutes[F] =
+    http4sServer.toRouteRecoverErrors[I, Throwable, O, F](e)(f)
 }
