@@ -85,14 +85,15 @@ ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
 ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
 
 // format: off
-val pureharmCoreV        = "0.2.0"      //https://github.com/busymachines/pureharm-core/releases
-val pureharmEffectsV     = "0.4.0"      //https://github.com/busymachines/pureharm-effects-cats/releases
-val pureharmJSONV        = "0.2.0"      //https://github.com/busymachines/pureharm-json-circe/releases
-val pureharmTestkitV     = "0.3.0"      //https://github.com/busymachines/pureharm-testkit/releases
-val http4sV              = "0.21.22"    //https://github.com/http4s/http4s/releases
-val tapirV               = "0.17.19"    //https://github.com/softwaremill/tapir/releases
-val log4catsV            = "1.2.2"      //https://github.com/typelevel/log4cats/releases
-val logbackV             = "1.2.3"      //https://github.com/qos-ch/logback/releases
+val pureharmCoreV        = "0.2.0"      // https://github.com/busymachines/pureharm-core/releases
+val pureharmEffectsV     = "0.4.0"      // https://github.com/busymachines/pureharm-effects-cats/releases
+val pureharmJSONV        = "0.2.0"      // https://github.com/busymachines/pureharm-json-circe/releases
+val pureharmTestkitV     = "0.3.0"      // https://github.com/busymachines/pureharm-testkit/releases
+val http4sV              = "0.21.22"    // https://github.com/http4s/http4s/releases
+val tapirV               = "0.17.19"    // https://github.com/softwaremill/tapir/releases
+val sttpSharedV          = "1.1.1"      // https://github.com/softwaremill/sttp-shared/releases
+val log4catsV            = "1.2.2"      // https://github.com/typelevel/log4cats/releases
+val logbackV             = "1.2.3"      // https://github.com/qos-ch/logback/releases
 // format: on
 //=============================================================================
 //============================== Project details ==============================
@@ -120,6 +121,7 @@ lazy val `endpoint-tapir` = project
       "com.busymachines"              %% "pureharm-core-sprout"       % pureharmCoreV       withSources(),
       "com.busymachines"              %% "pureharm-effects-cats"      % pureharmEffectsV    withSources(),
       "com.busymachines"              %% "pureharm-json-circe"        % pureharmJSONV       withSources(),
+      "com.softwaremill.sttp.shared"  %% "fs2"                        % sttpSharedV         withSources(),
       "com.softwaremill.sttp.tapir"   %% "tapir-core"                 % tapirV              withSources(),
       "com.softwaremill.sttp.tapir"   %% "tapir-json-circe"           % tapirV              withSources(),
       // format: on

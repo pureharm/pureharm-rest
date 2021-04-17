@@ -6,6 +6,7 @@ See [changelog](./CHANGELOG.md).
 
 - `"com.busymachines" %% "pureharm-endpoint-tapir" % "0.5.0-M1`
 
+  - [sttp-shared-fs2](https://github.com/softwaremill/sttp-shared/releases) `1.1.1`
   - [tapir-core](https://github.com/softwaremill/tapir/releases) `0.17.19`
   - [tapir-json-circe](https://github.com/softwaremill/tapir/releases) `0.17.19`
   - [pureharm-core-anomaly](https://github.com/busymachines/pureharm-core/releases) `0.2.0`

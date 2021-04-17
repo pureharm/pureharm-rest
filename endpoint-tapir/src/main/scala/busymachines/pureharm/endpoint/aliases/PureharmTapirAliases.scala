@@ -111,4 +111,8 @@ trait PureharmTapirAliases {
 
   /** TapirAuth.scala */
   val TapirAuth: sttp.tapir.TapirAuth.type = sttp.tapir.TapirAuth
+
+  type Fs2Streams[F[_]] = sttp.capabilities.fs2.Fs2Streams[F]
+  val Fs2Streams = sttp.capabilities.fs2.Fs2Streams
+
 }
