@@ -23,9 +23,7 @@ import sttp.capabilities.fs2.Fs2Streams
 import sttp.tapir.Endpoint
 import sttp.tapir.server.http4s.{Http4sServerInterpreter, Http4sServerOptions}
 
-/**
-  */
-trait RestDefs[F[_], ET <: Concurrent[F], RT <: Http4sRuntime[F, ET]] {
+trait Http4sRoutes[F[_], ET <: Concurrent[F], RT <: Http4sRuntime[F, ET]] {
 
   protected def http4sRuntime: RT
   implicit protected def F:               ET                 = http4sRuntime.F

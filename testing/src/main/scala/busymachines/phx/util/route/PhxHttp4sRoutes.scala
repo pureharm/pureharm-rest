@@ -18,9 +18,6 @@ package busymachines.phx.util.route
 
 import busymachines.pureharm.effects._
 
-abstract class PhxHttp4sRoutes[F[_]](implicit rt: PhxHttp4sRuntime[F])
-  extends RestDefs[F, Concurrent[F], PhxHttp4sRuntime[F]] {
-
-  override val http4sRuntime: PhxHttp4sRuntime[F] = rt
-
-}
+abstract class PhxHttp4sRoutes[F[_]](implicit
+  override protected val http4sRuntime: PhxHttp4sRuntime[F]
+) extends Http4sRoutes[F, Concurrent[F], PhxHttp4sRuntime[F]]

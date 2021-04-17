@@ -25,6 +25,10 @@ the library as before.
 
 #### source changes
 
+#### deprecations
+
+- deprecate `RestDefs` in favor of `Http4sRoutes`, they are source compatible.
+
 ### new features
 
 - add `fromEnpoint` helper function in `RestDefs`

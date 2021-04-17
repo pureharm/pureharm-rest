@@ -35,8 +35,12 @@ trait PureharmRestHttp4sTypeAliases {
   type Http4sRuntime[F[_], EffectType <: Concurrent[F]] =
     busymachines.pureharm.route.Http4sRuntime[F, EffectType]
 
+  type Http4sRoutes[F[_], ET <: Concurrent[F], RT <: Http4sRuntime[F, ET]] =
+    busymachines.pureharm.route.Http4sRoutes[F, ET, RT]
+
+  @scala.deprecated("Use Http4sRoutes instead. Otherwise it's source compatible", "0.5.0")
   type RestDefs[F[_], ET <: Concurrent[F], RT <: Http4sRuntime[F, ET]] =
-    busymachines.pureharm.route.RestDefs[F, ET, RT]
+    busymachines.pureharm.route.Http4sRoutes[F, ET, RT]
 
   type Http4sServerOptions[F[_]] = sttp.tapir.server.http4s.Http4sServerOptions[F]
 
