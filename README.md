@@ -2,21 +2,37 @@
 
 See [changelog](./CHANGELOG.md).
 
-We do not even pretend to support anything other than Postgresql.
-
 ## modules
 
-- `"com.busymachines" %% s"pureharm-rest-http4s-tapir" % "0.4.0"`. Which has these as its main dependencies:
-  - [http4s](https://github.com/http4s/http4s/releases) `0.21.22`
-  - [tapir](https://github.com/softwaremill/tapir/releases) `0.17.19`
+- `"com.busymachines" %% "pureharm-endpoint-tapir" % "0.5.0-M1`
+
+  - [tapir-core](https://github.com/softwaremill/tapir/releases) `0.17.19`
+  - [tapir-json-circe](https://github.com/softwaremill/tapir/releases) `0.17.19`
   - [pureharm-core-anomaly](https://github.com/busymachines/pureharm-core/releases) `0.2.0`
   - [pureharm-core-sprout](https://github.com/busymachines/pureharm-core/releases) `0.2.0`
-  - [pureharm-effects-cats](https://github.com/busymachines/pureharm-effects-cats/releases) `0.4.0`
   - [pureharm-json-circe](https://github.com/busymachines/pureharm-json-circe/releases) `0.2.0`
+  - [pureharm-effects-cats](https://github.com/busymachines/pureharm-effects-cats/releases) `0.4.0`
+
+- `"com.busymachines" %% "pureharm-endpoints-docs-tapir" % "0.5.0-M1`
+
+  - [tapir-openapi-docs](https://github.com/softwaremill/tapir/releases) `0.17.19`
+  - [tapir-openapi-circe-yaml](https://github.com/softwaremill/tapir/releases) `0.17.19`
+
+- `"com.busymachines" %% "pureharm-route-http4s-tapir" % "0.5.0-M1`
+
+  - `pureharm-endpoint-tapir`
+  - [http4s-dsl](https://github.com/http4s/http4s/releases) `0.21.22`
+  - [tapir-http4s-server](https://github.com/softwaremill/tapir/releases) `0.17.19`
+
+- `"com.busymachines" %% "pureharm-server-http4s" % "0.5.0-M1`
+  - [pureharm-effects-cats](https://github.com/busymachines/pureharm-effects-cats/releases) `0.4.0`
+  - [http4s-blaze-server](https://github.com/http4s/http4s/releases) `0.21.22`
 
 ## usage
 
-Under construction. See [release notes](https://github.com/busymachines/pureharm-db-flyway/releases) and tests for examples.
+See [`testing`](./testing) for a pretty much full-fledged example on how to use the modules.
+
+Still under construction. See [release notes](https://github.com/busymachines/pureharm-rest/releases) and tests for examples.
 
 ## Copyright and License
 

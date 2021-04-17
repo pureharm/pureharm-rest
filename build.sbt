@@ -18,12 +18,13 @@
 //============================== build details ================================
 //=============================================================================
 
+addCommandAlias("format", ";scalafmtSbt;scalafmtConfig;scalafmtAll")
 addCommandAlias("github-gen", "githubWorkflowGenerate")
 addCommandAlias("github-check", "githubWorkflowCheck")
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-val Scala213  = "2.13.5"
-val Scala3RC1 = "3.0.0-RC1"
+val Scala213 = "2.13.5"
 
 //=============================================================================
 //============================ publishing details =============================
@@ -32,10 +33,10 @@ val Scala3RC1 = "3.0.0-RC1"
 //see: https://github.com/xerial/sbt-sonatype#buildsbt
 ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
 
-ThisBuild / baseVersion  := "0.4"
-ThisBuild / organization := "com.busymachines"
+ThisBuild / baseVersion      := "0.5"
+ThisBuild / organization     := "com.busymachines"
 ThisBuild / organizationName := "BusyMachines"
-ThisBuild / homepage     := Option(url("https://github.com/busymachines/pureharm-testkit"))
+ThisBuild / homepage         := Option(url("https://github.com/busymachines/pureharm-rest"))
 
 ThisBuild / scmInfo := Option(
   ScmInfo(
@@ -60,22 +61,21 @@ ThisBuild / developers := List(
   )
 )
 
-ThisBuild / startYear := Some(2019)
+ThisBuild / startYear  := Some(2021)
 ThisBuild / licenses   := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 
 //until we get to 1.0.0, we keep strictSemVer false
 ThisBuild / strictSemVer              := false
-ThisBuild / spiewakCiReleaseSnapshots := false
+ThisBuild / spiewakCiReleaseSnapshots := true
 ThisBuild / spiewakMainBranches       := List("main")
 ThisBuild / Test / publishArtifact    := false
 
 ThisBuild / scalaVersion       := Scala213
-ThisBuild / crossScalaVersions := List(Scala213) //List(Scala213, Scala3RC1)
+ThisBuild / crossScalaVersions := List(Scala213)
 
 //required for binary compat checks
 ThisBuild / versionIntroduced := Map(
-  Scala213  -> "0.1.0",
-  Scala3RC1 -> "0.1.0",
+  Scala213 -> "0.1.0"
 )
 
 //=============================================================================
@@ -92,6 +92,7 @@ val pureharmTestkitV     = "0.3.0"      //https://github.com/busymachines/pureha
 val http4sV              = "0.21.22"    //https://github.com/http4s/http4s/releases
 val tapirV               = "0.17.19"    //https://github.com/softwaremill/tapir/releases
 val log4catsV            = "1.2.2"      //https://github.com/typelevel/log4cats/releases
+val logbackV             = "1.2.3"      //https://github.com/qos-ch/logback/releases
 // format: on
 //=============================================================================
 //============================== Project details ==============================
@@ -100,52 +101,88 @@ val log4catsV            = "1.2.2"      //https://github.com/typelevel/log4cats/
 lazy val root = project
   .in(file("."))
   .aggregate(
-    `rest-http4s-tapir`,
-    `rest-http4s-tapir-testkit`
+    `endpoint-tapir`,
+    `endpoint-docs-tapir`,
+    `route-http4s`,
+    `testing`,
   )
   .enablePlugins(NoPublishPlugin)
   .enablePlugins(SonatypeCiReleasePlugin)
   .settings(commonSettings)
 
-lazy val `rest-http4s-tapir` = project
+lazy val `endpoint-tapir` = project
   .settings(commonSettings)
   .settings(
-    name := "pureharm-rest-http4s-tapir",
-    libraryDependencies ++= Seq(  
+    name := "pureharm-endpoint-tapir",
+    libraryDependencies ++= Seq(
       // format: off
-      "org.http4s"                    %% "http4s-dsl"                 % http4sV             withSources(),
-      "org.http4s"                    %% "http4s-circe"               % http4sV             withSources(),
       "com.busymachines"              %% "pureharm-core-anomaly"      % pureharmCoreV       withSources(),
       "com.busymachines"              %% "pureharm-core-sprout"       % pureharmCoreV       withSources(),
       "com.busymachines"              %% "pureharm-effects-cats"      % pureharmEffectsV    withSources(),
       "com.busymachines"              %% "pureharm-json-circe"        % pureharmJSONV       withSources(),
       "com.softwaremill.sttp.tapir"   %% "tapir-core"                 % tapirV              withSources(),
       "com.softwaremill.sttp.tapir"   %% "tapir-json-circe"           % tapirV              withSources(),
+      // format: on
+    ),
+  )
+
+lazy val `endpoint-docs-tapir` = project
+  .settings(commonSettings)
+  .settings(
+    name := "pureharm-endpoints-tapir-docs",
+    libraryDependencies ++= Seq(
+      // format: off
+      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-docs"          % tapirV       withSources(),
+      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-circe-yaml"    % tapirV       withSources(),
+      // format: on
+    ),
+  )
+
+lazy val `route-http4s` = project
+  .settings(commonSettings)
+  .settings(
+    name := "pureharm-route-http4s-tapir",
+    libraryDependencies ++= Seq(
+      // format: off
+      "org.http4s"                    %% "http4s-dsl"                 % http4sV             withSources(),
       "com.softwaremill.sttp.tapir"   %% "tapir-http4s-server"        % tapirV              withSources(),
       // format: on
     ),
   )
-
-
-lazy val `rest-http4s-tapir-testkit` = project
-  .settings(commonSettings)
-  .enablePlugins(NoPublishPlugin)
-  .settings(
-    name := "pureharm-rest-http4s-tapir",
-    libraryDependencies ++= Seq(  
-      // format: on
-      "com.busymachines"              %% "pureharm-testkit"           % pureharmTestkitV      withSources(),
-      "org.http4s"                    %% "http4s-blaze-server"        % http4sV     % Test    withSources(),
-      "org.typelevel"                 %% "log4cats-core"              % log4catsV   % Test    withSources(),
-      "org.typelevel"                 %% "log4cats-slf4j"             % log4catsV   % Test    withSources(),
-      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-docs"         % tapirV      % Test    withSources(),
-      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-circe-yaml"   % tapirV      % Test    withSources(),
-      // format: off
-    ),
-  ).dependsOn(
-    `rest-http4s-tapir`
+  .dependsOn(
+    `endpoint-tapir`
   )
 
+lazy val `server-http4s` = project
+  .settings(commonSettings)
+  .settings(
+    name := "pureharm-server-http4s",
+    libraryDependencies ++= Seq(
+      // format: off
+      "com.busymachines"              %% "pureharm-effects-cats"      % pureharmEffectsV    withSources(),
+      "org.http4s"                    %% "http4s-blaze-server"        % http4sV             withSources(),
+      // format: on
+    ),
+  )
+
+lazy val `testing` = project
+  .enablePlugins(NoPublishPlugin)
+  .settings(commonSettings)
+  .settings(
+    name := "pureharm-rest-testing",
+    libraryDependencies ++= Seq(
+      // format: off
+      "org.typelevel"         %% "log4cats-slf4j"         % log4catsV     withSources(),
+      "ch.qos.logback"         % "logback-classic"        % logbackV      withSources()
+      // format: on
+    ),
+  )
+  .dependsOn(
+    `endpoint-tapir`,
+    `endpoint-docs-tapir`,
+    `route-http4s`,
+    `server-http4s`,
+  )
 //=============================================================================
 //================================= Settings ==================================
 //=============================================================================
