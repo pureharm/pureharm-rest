@@ -58,8 +58,8 @@ object PureharmTapirDecodeFailureHandler {
     */
   def handler(
     missingOrInvalidAuth:                      DecodeFailureContext => Option[DecodeFailureHandling] = noAuthHandler,
-    badRequestOnPathErrorIfPathShapeMatches:   Boolean = false,
-    badRequestOnPathInvalidIfPathShapeMatches: Boolean = true,
+    badRequestOnPathErrorIfPathShapeMatches:   Boolean                                               = false,
+    badRequestOnPathInvalidIfPathShapeMatches: Boolean                                               = true,
   ): DecodeFailureHandler = { ctx: DecodeFailureContext =>
     val tapirDefaultFlow: PartialFunction[DecodeFailureContext, DecodeFailureHandling] = {
       case DecodeFailureContext(input, _, _) =>

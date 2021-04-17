@@ -18,12 +18,13 @@
 //============================== build details ================================
 //=============================================================================
 
+addCommandAlias("format", ";scalafmtSbt;scalafmtConfig;scalafmtAll")
 addCommandAlias("github-gen", "githubWorkflowGenerate")
 addCommandAlias("github-check", "githubWorkflowCheck")
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-val Scala213  = "2.13.5"
-val Scala3RC1 = "3.0.0-RC1"
+val Scala213 = "2.13.5"
 
 //=============================================================================
 //============================ publishing details =============================
@@ -74,8 +75,7 @@ ThisBuild / crossScalaVersions := List(Scala213)
 
 //required for binary compat checks
 ThisBuild / versionIntroduced := Map(
-  Scala213  -> "0.1.0",
-  Scala3RC1 -> "0.1.0",
+  Scala213 -> "0.1.0"
 )
 
 //=============================================================================
