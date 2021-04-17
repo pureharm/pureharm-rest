@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # unreleased
 
+### :warning: breaking changes :warning
+
+#### remodularize everything
+
+Mostly source compatible, depending on all modules should allow you to use
+the library as before.
+
+- `"com.busymachines" %% "pureharm-endpoint-tapir"`
+  - now contains everything `tapir` related needed to define `Endpoint`s, sans dependency on `http4s`
+- `"com.busymachines" %% "pureharm-endpoints-docs-tapir"`
+  - contains a simple helper method to print out YAML representation of OpenAPI
+- `"com.busymachines" %% "pureharm-route-http4s-tapir"`
+  - contains everything `http4s` related, and required to transform `tapir` endpoints into `http4s` routes
+- `"com.busymachines" %% "pureharm-server-http4s"`
+  - depends on `http4s-blaze-server`, contains helpers to run the server and bind ports, etc.
+
+#### source changes
+
 # 0.4.0
 
 ### dependency upgrades
