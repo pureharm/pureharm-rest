@@ -16,10 +16,13 @@
 
 package busymachines.phx.domain
 
+import busymachines.phx.util.json._
 import busymachines.phx.util.endpoint._
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 10 Jul 2020
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 10
+  *   Jul 2020
   */
 final case class MyInputType(
   f1:  PHString,
@@ -32,8 +35,6 @@ final case class MyInputType(
 )
 
 object MyInputType {
-  import busymachines.pureharm.json._
-  import busymachines.pureharm.json.implicits._
 
   implicit val codec:  Codec[MyInputType]  = derive.codec[MyInputType]
   implicit val schema: Schema[MyInputType] = Schema.derived
@@ -51,9 +52,6 @@ final case class MyOutputType(
 )
 
 object MyOutputType {
-  import busymachines.pureharm.json._
-  import busymachines.pureharm.json.implicits._
-
   implicit val codec:  Codec[MyOutputType]  = derive.codec[MyOutputType]
   implicit val schema: Schema[MyOutputType] = Schema.derived
 }

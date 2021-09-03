@@ -19,12 +19,10 @@
 //=============================================================================
 
 addCommandAlias("format", ";scalafmtSbt;scalafmtConfig;scalafmtAll")
-addCommandAlias("github-gen", "githubWorkflowGenerate")
-addCommandAlias("github-check", "githubWorkflowCheck")
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-val Scala213 = "2.13.5"
+val Scala213 = "2.13.6"
 
 //=============================================================================
 //============================ publishing details =============================
@@ -45,8 +43,8 @@ ThisBuild / scmInfo := Option(
   )
 )
 
-/** I want my email. So I put this here. To reduce a few lines of code,
-  * the sbt-spiewak plugin generates this (except email) from these two settings:
+/** I want my email. So I put this here. To reduce a few lines of code, the sbt-spiewak plugin generates this (except
+  * email) from these two settings:
   * {{{
   * ThisBuild / publishFullName   := "Loránd Szakács"
   * ThisBuild / publishGithubUser := "lorandszakacs"
@@ -81,18 +79,19 @@ ThisBuild / versionIntroduced := Map(
 //=============================================================================
 //================================ Dependencies ===============================
 //=============================================================================
-ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
-ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
+//ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
+//ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
 
 // format: off
-val pureharmCoreV        = "0.2.0"      // https://github.com/busymachines/pureharm-core/releases
-val pureharmEffectsV     = "0.4.0"      // https://github.com/busymachines/pureharm-effects-cats/releases
-val pureharmJSONV        = "0.2.0"      // https://github.com/busymachines/pureharm-json-circe/releases
-val pureharmTestkitV     = "0.3.0"      // https://github.com/busymachines/pureharm-testkit/releases
-val http4sV              = "0.21.22"    // https://github.com/http4s/http4s/releases
-val tapirV               = "0.17.19"    // https://github.com/softwaremill/tapir/releases
+val pureharmCoreV        = "0.3.0"      // https://github.com/busymachines/pureharm-core/releases
+val pureharmEffectsV     = "0.5.0"      // https://github.com/busymachines/pureharm-effects-cats/releases
+val pureharmJSONV        = "0.3.0-M1"   // https://github.com/busymachines/pureharm-json-circe/releases
+val pureharmTestkitV     = "0.4.0"      // https://github.com/busymachines/pureharm-testkit/releases
+val http4sV              = "0.21.27"     // https://github.com/http4s/http4s/releases
+val tapirV               = "0.17.9"     // https://github.com/softwaremill/tapir/releases
 val sttpSharedV          = "1.1.1"      // https://github.com/softwaremill/sttp-shared/releases
-val log4catsV            = "1.2.2"      // https://github.com/typelevel/log4cats/releases
+val log4catsV            = "2.1.1"      // https://github.com/typelevel/log4cats/releases
+val log4catsCE2V         = "1.3.1"      // https://github.com/typelevel/log4cats/releases
 val logbackV             = "1.2.3"      // https://github.com/qos-ch/logback/releases
 // format: on
 //=============================================================================
@@ -109,45 +108,41 @@ lazy val root = project
   )
   .enablePlugins(NoPublishPlugin)
   .enablePlugins(SonatypeCiReleasePlugin)
-  .settings(commonSettings)
 
 lazy val `endpoint-tapir` = project
-  .settings(commonSettings)
   .settings(
     name := "pureharm-endpoint-tapir",
     libraryDependencies ++= Seq(
       // format: off
-      "com.busymachines"              %% "pureharm-core-anomaly"      % pureharmCoreV       withSources(),
-      "com.busymachines"              %% "pureharm-core-sprout"       % pureharmCoreV       withSources(),
-      "com.busymachines"              %% "pureharm-effects-cats"      % pureharmEffectsV    withSources(),
-      "com.busymachines"              %% "pureharm-json-circe"        % pureharmJSONV       withSources(),
-      "com.softwaremill.sttp.shared"  %% "fs2"                        % sttpSharedV         withSources(),
-      "com.softwaremill.sttp.tapir"   %% "tapir-core"                 % tapirV              withSources(),
-      "com.softwaremill.sttp.tapir"   %% "tapir-json-circe"           % tapirV              withSources(),
+      "com.busymachines"                %% "pureharm-core-anomaly"          % pureharmCoreV         withSources(),
+      "com.busymachines"                %% "pureharm-core-sprout"           % pureharmCoreV         withSources(),
+      "com.busymachines"                %% "pureharm-effects-cats-2"        % pureharmEffectsV      withSources(),
+      "com.busymachines"                %% "pureharm-json-circe"            % pureharmJSONV         withSources(),
+      "com.softwaremill.sttp.shared"    %% "fs2"                            % sttpSharedV           withSources(),
+      "com.softwaremill.sttp.tapir"     %% "tapir-core"                     % tapirV                withSources(),
+      "com.softwaremill.sttp.tapir"     %% "tapir-json-circe"               % tapirV                withSources(),
       // format: on
     ),
   )
 
 lazy val `endpoint-docs-tapir` = project
-  .settings(commonSettings)
   .settings(
     name := "pureharm-endpoint-docs-tapir",
     libraryDependencies ++= Seq(
       // format: off
-      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-docs"          % tapirV       withSources(),
-      "com.softwaremill.sttp.tapir"   %% "tapir-openapi-circe-yaml"    % tapirV       withSources(),
+      "com.softwaremill.sttp.tapir"     %% "tapir-openapi-docs"             % tapirV                withSources(),
+      "com.softwaremill.sttp.tapir"     %% "tapir-openapi-circe-yaml"       % tapirV                withSources(),
       // format: on
     ),
   )
 
 lazy val `route-http4s` = project
-  .settings(commonSettings)
   .settings(
     name := "pureharm-route-http4s-tapir",
     libraryDependencies ++= Seq(
       // format: off
-      "org.http4s"                    %% "http4s-dsl"                 % http4sV             withSources(),
-      "com.softwaremill.sttp.tapir"   %% "tapir-http4s-server"        % tapirV              withSources(),
+      "org.http4s"                      %% "http4s-dsl"                     % http4sV               withSources(),
+      "com.softwaremill.sttp.tapir"     %% "tapir-http4s-server"            % tapirV                withSources(),
       // format: on
     ),
   )
@@ -156,26 +151,24 @@ lazy val `route-http4s` = project
   )
 
 lazy val `server-http4s` = project
-  .settings(commonSettings)
   .settings(
     name := "pureharm-server-http4s",
     libraryDependencies ++= Seq(
       // format: off
-      "com.busymachines"              %% "pureharm-effects-cats"      % pureharmEffectsV    withSources(),
-      "org.http4s"                    %% "http4s-blaze-server"        % http4sV             withSources(),
+      "com.busymachines"                %% "pureharm-effects-cats-2"        % pureharmEffectsV      withSources(),
+      "org.http4s"                      %% "http4s-blaze-server"            % http4sV               withSources(),
       // format: on
     ),
   )
 
 lazy val `testing` = project
   .enablePlugins(NoPublishPlugin)
-  .settings(commonSettings)
   .settings(
     name := "pureharm-rest-testing",
     libraryDependencies ++= Seq(
       // format: off
-      "org.typelevel"         %% "log4cats-slf4j"         % log4catsV     withSources(),
-      "ch.qos.logback"         % "logback-classic"        % logbackV      withSources()
+      "org.typelevel"                   %% "log4cats-slf4j"                 % log4catsCE2V          withSources(),
+      "ch.qos.logback"                   % "logback-classic"                % logbackV              withSources()
       // format: on
     ),
   )
@@ -185,21 +178,3 @@ lazy val `testing` = project
     `route-http4s`,
     `server-http4s`,
   )
-//=============================================================================
-//================================= Settings ==================================
-//=============================================================================
-
-lazy val commonSettings = Seq(
-  Compile / unmanagedSourceDirectories ++= {
-    val major = if (isDotty.value) "-3" else "-2"
-    List(CrossType.Pure, CrossType.Full).flatMap(
-      _.sharedSrcDir(baseDirectory.value, "main").toList.map(f => file(f.getPath + major))
-    )
-  },
-  Test / unmanagedSourceDirectories ++= {
-    val major = if (isDotty.value) "-3" else "-2"
-    List(CrossType.Pure, CrossType.Full).flatMap(
-      _.sharedSrcDir(baseDirectory.value, "test").toList.map(f => file(f.getPath + major))
-    )
-  },
-)

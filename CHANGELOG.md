@@ -39,6 +39,14 @@ the library as before.
 - add `fromEnpoint` helper function in `RestDefs`
 - add `PureharmEndpointAllTypeAliases`, `PureharmEndpointAllImplicits` mixin traits to `pureharm-endpoint-tapir`
 
+### internals
+- bump scalafmt to `3.0.1`
+- bump sbt to `1.5.5`
+- bump sbt-spiewak to `0.22.0`
+- bump sbt-scalafmt to `2.4.3`
+- bump sbt-scalajs-crossproject to `1.1.0`
+- bump sbt-scalajs to `1.7.0`
+
 # 0.4.0
 
 ### dependency upgrades

@@ -17,12 +17,13 @@
 package busymachines.phx.docs
 
 import busymachines.pureharm.effects._
-import busymachines.pureharm.effects.implicits._
 import busymachines.pureharm.endpoint.docs._
 import busymachines.phx.api.PhxEndpoints
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 13 Jul 2020
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 13
+  *   Jul 2020
   */
 object PhxDocs {
 
