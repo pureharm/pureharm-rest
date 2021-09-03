@@ -22,8 +22,10 @@ import io.circe.Printer
 import org.http4s._
 import org.http4s.headers.`Content-Type`
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 26 Jun 2018
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 26
+  *   Jun 2018
   */
 trait PureharmHttp4sCirceInstances {
   import PureharmHttp4sCirceInstances._

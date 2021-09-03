@@ -19,8 +19,10 @@ package busymachines.pureharm.endpoint
 import busymachines.pureharm.anomaly.{AnomalyBase, SeqStringWrapper}
 import sttp.tapir
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 14 Jul 2020
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 14
+  *   Jul 2020
   */
 object PureharmTapirSchemas {
 

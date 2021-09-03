@@ -20,8 +20,10 @@ import busymachines.pureharm.effects.implicits._
 import sttp.model.StatusCode
 import sttp.tapir.server.DecodeFailureHandling._
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 14 Jul 2020
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 14
+  *   Jul 2020
   */
 object PureharmTapirDecodeFailureHandler {
   import sttp.tapir._
@@ -34,27 +36,24 @@ object PureharmTapirDecodeFailureHandler {
 
   /** Used for reporting error messages when
     *
-    * Note for devs:
-    * Use sttp.tapir.server.ServerDefaults.decodeFailureHandler as a reference
-    * on how and when to give "no match" responses. Otherwise, upon endpoints will
-    * not be walked through to see which one matches.
+    * Note for devs: Use sttp.tapir.server.ServerDefaults.decodeFailureHandler as a reference on how and when to give
+    * "no match" responses. Otherwise, upon endpoints will not be walked through to see which one matches.
     *
     * @param missingOrInvalidAuth
-    *   This function is used to detect if your flavor of authentication is present or not
-    *   and ideally would return a 401 Unauthorized, otherwise, we can return only BadRequest.
-    *   Which kinda sucks.
+    *   This function is used to detect if your flavor of authentication is present or not and ideally would return a
+    *   401 Unauthorized, otherwise, we can return only BadRequest. Which kinda sucks.
     *
-    *   There are values for the three out-of-the-box
+    * There are values for the three out-of-the-box
     *
     * @param badRequestOnPathErrorIfPathShapeMatches
-    * from docs of sttp.tapir.server.ServerDefaults.FailureHandling#respondWithStatusCode
-    * "Should a status 400 be returned if the shape of the path
-    * of the request matches, but decoding some path segment fails with a DecodeResult.Error."
+    *   from docs of sttp.tapir.server.ServerDefaults.FailureHandling#respondWithStatusCode "Should a status 400 be
+    *   returned if the shape of the path of the request matches, but decoding some path segment fails with a
+    *   DecodeResult.Error."
     *
     * @param badRequestOnPathInvalidIfPathShapeMatches
-    * from docs of sttp.tapir.server.ServerDefaults.FailureHandling#respondWithStatusCode]]
-    * "Should a status 400 be returned if the shape of the path
-    * of the request matches, but decoding some path segment fails with a DecodeResult.InvalidValue."
+    *   from docs of sttp.tapir.server.ServerDefaults.FailureHandling#respondWithStatusCode]] "Should a status 400 be
+    *   returned if the shape of the path of the request matches, but decoding some path segment fails with a
+    *   DecodeResult.InvalidValue."
     */
   def handler(
     missingOrInvalidAuth:                      DecodeFailureContext => Option[DecodeFailureHandling] = noAuthHandler,
@@ -113,7 +112,7 @@ object PureharmTapirDecodeFailureHandler {
 
   /** Tapir says "invalid" even when stuff is missing, which is annoying
     * @see
-    * sttp.tapir.server.ServerDefaults.FailureMessages#failureSourceMessage
+    *   sttp.tapir.server.ServerDefaults.FailureMessages#failureSourceMessage
     */
   private val TapirDefaultMessage: String = "Invalid value for"
   private val Missing:             String = "Missing"

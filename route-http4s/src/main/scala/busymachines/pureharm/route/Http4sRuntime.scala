@@ -22,13 +22,10 @@ import sttp.tapir.server.http4s.Http4sServerOptions
 import sttp.tapir.server.{DecodeFailureContext, DecodeFailureHandling}
 import busymachines.pureharm.endpoint
 
-/** Encapsulates all things needed to translate
-  * tapir Endpoints to http4s Route.
+/** Encapsulates all things needed to translate tapir Endpoints to http4s Route.
   *
-  * This abstract class should be extended and the EffectType
-  * fixed. http4s needs at least Sync, but sometimes in your
-  * specific app you might need a stronger constraint, and
-  * you ought to define subclasses of this with stronger
+  * This abstract class should be extended and the EffectType fixed. http4s needs at least Sync, but sometimes in your
+  * specific app you might need a stronger constraint, and you ought to define subclasses of this with stronger
   * constraints, and propagate those.
   *
   * E.g.
@@ -49,7 +46,7 @@ import busymachines.pureharm.endpoint
   * And in http4s route definitions, use this:
   *
   * {{{
-  *    final class SomeAPI[F[_]](
+  *     final class SomeAPI[F[_]](
   *     domain:                     SomeOrganizer[F]
   *   )(implicit val http4sRuntime: TestHttp4sRuntime[F]) {
   *
@@ -106,8 +103,8 @@ abstract class Http4sRuntime[F[_], EffectType <: Concurrent[F]] {
     createFile               = Http4sServerOptions.defaultCreateFile[F],
     blockingExecutionContext = blockingShifter.blocker.blockingContext,
     ioChunkSize              = 8192,
-    decodeFailureHandler     = endpoint.PureharmTapirDecodeFailureHandler.handler(), //ServerDefaults.decodeFailureHandler,
-    logRequestHandling       = Http4sServerOptions
+    decodeFailureHandler = endpoint.PureharmTapirDecodeFailureHandler.handler(), //ServerDefaults.decodeFailureHandler,
+    logRequestHandling   = Http4sServerOptions
       .defaultLogRequestHandling[F]
       .copy(
         logLogicExceptions = false

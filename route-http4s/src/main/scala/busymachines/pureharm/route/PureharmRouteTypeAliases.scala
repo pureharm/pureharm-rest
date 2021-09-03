@@ -19,8 +19,10 @@ package busymachines.pureharm.route
 import org.http4s
 import sttp.tapir.server.{http4s => thttp4s}
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 10 Jul 2020
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 10
+  *   Jul 2020
   */
 trait PureharmRouteTypeAliases {
   type HttpApp[F[_]] = http4s.HttpApp[F]

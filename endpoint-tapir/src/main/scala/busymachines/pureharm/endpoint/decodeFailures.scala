@@ -19,8 +19,10 @@ package busymachines.pureharm.endpoint
 import busymachines.pureharm.anomaly._
 import io.circe.{CursorOp, DecodingFailure}
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 15 Jul 2020
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 15
+  *   Jul 2020
   */
 
 final private[pureharm] case class CirceDecodingAnomaly(
@@ -58,10 +60,10 @@ final private[pureharm] case class CirceDecodingAnomaly(
     *   List(MoveRight, MoveRight, MoveRight, DownArray, DownField(f4))
     * }}}
     * So we count all contiguous MoveRight from head to tail.
-    *   - Since going down into nested arrays requires a DownArray
-    * TODO: test to see if this heuristic works properly for:
-    *  - arrays in arrays
-    *  - arrays containing objects containing arrays (and failure is in these nested arrays)
+    *   - Since going down into nested arrays requires a DownArray TODO: test to see if this heuristic works properly
+    *     for:
+    *   - arrays in arrays
+    *   - arrays containing objects containing arrays (and failure is in these nested arrays)
     * @return
     */
   private def countArrayFailureIndex(o: List[CursorOp]): Option[Int] = {
@@ -82,8 +84,8 @@ final private[pureharm] case class CirceDecodingAnomaly(
 }
 
 object CirceDecodingAnomaly {
-  /** When a field is missing, circe usually answers with this message:
-    * DecodingFailure(Attempt to decode value on failed cursor, List(DownField(fl)))
+  /** When a field is missing, circe usually answers with this message: DecodingFailure(Attempt to decode value on
+    * failed cursor, List(DownField(fl)))
     *
     * So we are kinda left to interpret strings, which sucks and is brittle...
     */

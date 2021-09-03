@@ -18,8 +18,10 @@ package busymachines.pureharm.endpoint.aliases
 
 import sttp.tapir.server
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 16 Jul 2020
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 16
+  *   Jul 2020
   */
 trait PureharmTapirServerAliases {
   type DecodeFailureHandling = server.DecodeFailureHandling

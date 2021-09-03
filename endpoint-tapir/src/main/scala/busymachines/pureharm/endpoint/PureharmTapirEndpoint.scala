@@ -20,16 +20,17 @@ import busymachines.pureharm.anomaly._
 import busymachines.pureharm.internals.json.AnomalyJsonCodec
 import sttp.tapir._
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 14 Jul 2020
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 14
+  *   Jul 2020
   */
 object PureharmTapirEndpoint {
   import busymachines.pureharm.json.{Codec => CCodec}
 
-  /** This should serve as your basis for most endpoints in your app.
-    * It provides grade A interpretation of all Anomaly types, plus
-    * the good old mapping to status codes. You can easily glance the
-    * mapping from the implementation. But here it is for easy glancing:
+  /** This should serve as your basis for most endpoints in your app. It provides grade A interpretation of all Anomaly
+    * types, plus the good old mapping to status codes. You can easily glance the mapping from the implementation. But
+    * here it is for easy glancing:
     *
     * {{{
     *   NotFoundAnomaly              StatusCode.NotFound

@@ -19,8 +19,10 @@ package busymachines.pureharm.endpoint
 import busymachines.pureharm.sprout._
 import sttp.tapir
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 10 Jul 2020
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 10
+  *   Jul 2020
   */
 trait PureharmSproutTypeRestTapirImplicits extends sttp.tapir.json.circe.TapirJsonCirce {
 
@@ -48,8 +50,8 @@ trait PureharmSproutTypeRestTapirImplicits extends sttp.tapir.json.circe.TapirJs
     sc: tapir.Validator[Old]
   ): tapir.Validator[PT] = sc.contramap(OldType[Old, PT].oldType)
 
-  /** Basically, it's union of the schema of AnomalyBase and AnomaliesBase,
-    * + any non-anomaly throwable is being wrapped in an UnhandledAnomaly
+  /** Basically, it's union of the schema of AnomalyBase and AnomaliesBase, + any non-anomaly throwable is being wrapped
+    * in an UnhandledAnomaly
     */
   implicit val tapirSchemaThrowableAnomaly: tapir.Schema[Throwable] = PureharmTapirSchemas.tapirSchemaAnomalies
 

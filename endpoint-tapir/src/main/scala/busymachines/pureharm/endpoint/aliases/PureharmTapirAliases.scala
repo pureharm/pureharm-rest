@@ -19,17 +19,16 @@ package busymachines.pureharm.endpoint.aliases
 import sttp.tapir.{LowPrioritySchema, SchemaExtensions}
 import sttp.tapir.generic.internal.SchemaMagnoliaDerivation
 
-/** Mirrors: sttp.tapir.TapirAliases but it realiases Codec to TapirCodec
-  * because that conflicts with Circe's Codec, and that's way too annoying.
+/** Mirrors: sttp.tapir.TapirAliases but it realiases Codec to TapirCodec because that conflicts with Circe's Codec, and
+  * that's way too annoying.
   */
 trait PureharmTapirAliases {
 
   type SimpleEndpoint[I, O] = sttp.tapir.Endpoint[I, Throwable, O, Any]
 
-  /** This should serve as your basis for most endpoints in your app.
-    * It provides grade A interpretation of all Anomaly types, plus
-    * the good old mapping to status codes. You can easily glance the
-    * mapping from the implementation. But here it is for easy glancing:
+  /** This should serve as your basis for most endpoints in your app. It provides grade A interpretation of all Anomaly
+    * types, plus the good old mapping to status codes. You can easily glance the mapping from the implementation. But
+    * here it is for easy glancing:
     *
     * {{{
     *   NotFoundAnomaly              StatusCode.NotFound

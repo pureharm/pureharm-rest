@@ -19,8 +19,10 @@ package busymachines.pureharm.endpoint
 import busymachines.pureharm.sprout._
 import sttp.tapir
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 21 Jul 2020
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 21
+  *   Jul 2020
   */
 object TapirCodecs {
 

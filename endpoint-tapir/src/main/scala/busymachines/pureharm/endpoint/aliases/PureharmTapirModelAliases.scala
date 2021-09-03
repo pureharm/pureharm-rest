@@ -16,8 +16,10 @@
 
 package busymachines.pureharm.endpoint.aliases
 
-/** @author Lorand Szakacs, https://github.com/lorandszakacs
-  * @since 16 Jul 2020
+/** @author
+  *   Lorand Szakacs, https://github.com/lorandszakacs
+  * @since 16
+  *   Jul 2020
   */
 trait PureharmTapirModelAliases {
   type HasHeaders = sttp.model.HasHeaders
