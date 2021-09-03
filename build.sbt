@@ -29,7 +29,8 @@ val Scala213 = "2.13.6"
 //=============================================================================
 
 //see: https://github.com/xerial/sbt-sonatype#buildsbt
-ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
+//we want to be explicit about the credentials we use.
+ThisBuild / sonatypeCredentialHost := "oss.sonatype.org"
 
 ThisBuild / baseVersion      := "0.5"
 ThisBuild / organization     := "com.busymachines"
