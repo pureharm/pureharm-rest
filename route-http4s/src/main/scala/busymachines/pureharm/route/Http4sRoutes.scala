@@ -33,7 +33,7 @@ trait Http4sRoutes[F[_], ET <: Concurrent[F], RT <: Http4sRuntime[F, ET]] {
   implicit protected def timer:           Timer[F]           = http4sRuntime.timer
 
   implicit protected def tapirHttp4Ops: Http4sServerOptions[F, F]  = http4sRuntime.http4sServerOptions
-  implicit protected val http4sServer:  Http4sServerInterpreter[F] = Http4sServerInterpreter[F]()
+  implicit protected val http4sServer:  Http4sServerInterpreter[F] = Http4sServerInterpreter[F](tapirHttp4Ops)
 
   protected def fromEndpoint[I, O](
     e: Endpoint[I, AnomalyLike, O, Fs2Streams[F] with WebSockets]

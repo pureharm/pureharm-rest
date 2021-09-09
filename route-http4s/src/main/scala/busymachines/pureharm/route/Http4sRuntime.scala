@@ -18,9 +18,14 @@ package busymachines.pureharm.route
 
 import scala.annotation.implicitNotFound
 import busymachines.pureharm.effects._
-import sttp.tapir.server.http4s.Http4sServerOptions
+import sttp.tapir.server.http4s.{Http4sResponseBody, Http4sServerOptions}
 import sttp.tapir.server.http4s.Http4sServerOptions.Log
-import sttp.tapir.server.interceptor.exception.DefaultExceptionHandler
+import sttp.tapir.server.interceptor.Interceptor
+import sttp.tapir.server.interceptor.content.UnsupportedMediaTypeInterceptor
+import sttp.tapir.server.interceptor.decodefailure.{DecodeFailureHandler, DefaultDecodeFailureHandler}
+import sttp.tapir.server.interceptor.exception.{DefaultExceptionHandler, ExceptionHandler}
+import sttp.tapir.server.interceptor.log.ServerLog
+import sttp.tapir.server.interceptor.metrics.MetricsRequestInterceptor
 
 /** Encapsulates all things needed to translate tapir Endpoints to http4s Route.
   *
@@ -97,13 +102,20 @@ abstract class Http4sRuntime[F[_], EffectType <: Concurrent[F]] {
 
   implicit def contextShift: ContextShift[F] = blockingShifter.contextShift
 
-  implicit def http4sServerOptions: Http4sServerOptions[F, F] = _defaultOps
+  implicit def http4sServerOptions: Http4sServerOptions[F, F] = _defaultServerOps
 
-  private[this] lazy val _defaultOps =
+  private lazy val _defaultServerOps = createCustomServerOptions()
+
+  protected def createCustomServerOptions(
+    exceptionHandler:     Option[ExceptionHandler]   = Option(DefaultExceptionHandler),
+    serverLog:            Option[ServerLog[F[Unit]]] = Option(Log.defaultServerLog[F]),
+    decodeFailureHandler: DecodeFailureHandler       = DefaultDecodeFailureHandler.handler,
+  ): Http4sServerOptions[F, F] =
     Http4sServerOptions
       .customInterceptors[F, F](
-        exceptionHandler         = Option(DefaultExceptionHandler),
-        serverLog                = Option(Log.defaultServerLog[F]),
+        exceptionHandler         = exceptionHandler,
+        serverLog                = serverLog,
+        decodeFailureHandler     = decodeFailureHandler,
         blockingExecutionContext = blockingShifter.blocker.blockingContext,
       )
 

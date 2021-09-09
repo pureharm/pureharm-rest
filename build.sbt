@@ -23,6 +23,7 @@ addCommandAlias("format", ";scalafmtSbt;scalafmtConfig;scalafmtAll")
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val Scala213 = "2.13.6"
+val Scala3   = "3.0.2"
 
 //=============================================================================
 //============================ publishing details =============================
@@ -70,11 +71,12 @@ ThisBuild / spiewakMainBranches       := List("main")
 ThisBuild / Test / publishArtifact    := false
 
 ThisBuild / scalaVersion       := Scala213
-ThisBuild / crossScalaVersions := List(Scala213)
+ThisBuild / crossScalaVersions := List(Scala213, Scala3)
 
 //required for binary compat checks
 ThisBuild / versionIntroduced := Map(
-  Scala213 -> "0.1.0"
+  Scala213 -> "0.1.0",
+  Scala3   -> "0.5.0-M2",
 )
 
 //=============================================================================
@@ -87,7 +89,7 @@ val pureharmEffectsV     = "0.5.0"      // https://github.com/busymachines/pureh
 val pureharmJSONV        = "0.3.0-M1"   // https://github.com/busymachines/pureharm-json-circe/releases
 val http4sV              = "0.22.4"     // https://github.com/http4s/http4s/releases
 val tapirV               = "0.18.3"     // https://github.com/softwaremill/tapir/releases
-val sttpSharedV          = "1.1.1"      // https://github.com/softwaremill/sttp-shared/releases
+val sttpSharedV          = "1.2.6"      // https://github.com/softwaremill/sttp-shared/releases
 val log4catsV            = "2.1.1"      // https://github.com/typelevel/log4cats/releases
 val log4catsCE2V         = "1.3.1"      // https://github.com/typelevel/log4cats/releases
 val logbackV             = "1.2.3"      // https://github.com/qos-ch/logback/releases
@@ -116,7 +118,7 @@ lazy val `endpoint-tapir` = project
       "com.busymachines"                %% "pureharm-core-sprout"           % pureharmCoreV         withSources(),
       "com.busymachines"                %% "pureharm-effects-cats-2"        % pureharmEffectsV      withSources(),
       "com.busymachines"                %% "pureharm-json-circe"            % pureharmJSONV         withSources(),
-      "com.softwaremill.sttp.shared"    %% "fs2"                            % sttpSharedV           withSources(),
+      "com.softwaremill.sttp.shared"    %% "fs2-ce2"                        % sttpSharedV           withSources(),
       "com.softwaremill.sttp.tapir"     %% "tapir-core"                     % tapirV                withSources(),
       "com.softwaremill.sttp.tapir"     %% "tapir-json-circe"               % tapirV                withSources(),
       // format: on
@@ -141,6 +143,9 @@ lazy val `route-http4s` = project
       // format: off
       "org.http4s"                      %% "http4s-dsl"                     % http4sV               withSources(),
       "com.softwaremill.sttp.tapir"     %% "tapir-http4s-server"            % tapirV                withSources(),
+      //these are the dependencies of tapir-http4s-server, so we use newer ones here
+      "org.http4s"                      %% "http4s-server"                  % http4sV               withSources(),
+      "org.http4s"                      %% "http4s-blaze-core"              % http4sV               withSources(),
       // format: on
     ),
   )
@@ -154,7 +159,8 @@ lazy val `server-http4s` = project
     libraryDependencies ++= Seq(
       // format: off
       "com.busymachines"                %% "pureharm-effects-cats-2"        % pureharmEffectsV      withSources(),
-      "org.http4s"                      %% "http4s-blaze-server"            % http4sV               withSources(),
+      "org.http4s"                      %% "http4s-server"                  % http4sV               withSources(),
+      "org.http4s"                      %% "http4s-blaze-core"              % http4sV               withSources(),
       // format: on
     ),
   )
@@ -166,7 +172,8 @@ lazy val `testing` = project
     libraryDependencies ++= Seq(
       // format: off
       "org.typelevel"                   %% "log4cats-slf4j"                 % log4catsCE2V          withSources(),
-      "ch.qos.logback"                   % "logback-classic"                % logbackV              withSources()
+      "ch.qos.logback"                   % "logback-classic"                % logbackV              withSources(),
+      "org.http4s"                      %% "http4s-blaze-server"            % http4sV               withSources(),
       // format: on
     ),
   )

@@ -27,8 +27,8 @@ final class PhxHttp4sRuntime[F[_]](
   override val timer:           Timer[F],
 ) extends route.Http4sRuntime[F, Concurrent[F]] {
 
-  override val http4sServerOptions: Http4sServerOptions[F, F] =
-    super.http4sServerOptions
+  //this is how you create custom server options
+  override val http4sServerOptions: Http4sServerOptions[F, F] = super.createCustomServerOptions()
 }
 
 object PhxHttp4sRuntime {
