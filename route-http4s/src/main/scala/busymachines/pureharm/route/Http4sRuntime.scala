@@ -19,8 +19,8 @@ package busymachines.pureharm.route
 import scala.annotation.implicitNotFound
 import busymachines.pureharm.effects._
 import sttp.tapir.server.http4s.Http4sServerOptions
-import sttp.tapir.server.{DecodeFailureContext, DecodeFailureHandling}
-import busymachines.pureharm.endpoint
+import sttp.tapir.server.http4s.Http4sServerOptions.Log
+import sttp.tapir.server.interceptor.exception.DefaultExceptionHandler
 
 /** Encapsulates all things needed to translate tapir Endpoints to http4s Route.
   *
@@ -97,39 +97,16 @@ abstract class Http4sRuntime[F[_], EffectType <: Concurrent[F]] {
 
   implicit def contextShift: ContextShift[F] = blockingShifter.contextShift
 
-  implicit def http4sServerOptions: Http4sServerOptions[F] = _defaultOps
+  implicit def http4sServerOptions: Http4sServerOptions[F, F] = _defaultOps
 
-  private[this] lazy val _defaultOps = Http4sServerOptions[F](
-    createFile               = Http4sServerOptions.defaultCreateFile[F],
-    blockingExecutionContext = blockingShifter.blocker.blockingContext,
-    ioChunkSize              = 8192,
-    decodeFailureHandler = endpoint.PureharmTapirDecodeFailureHandler.handler(), //ServerDefaults.decodeFailureHandler,
-    logRequestHandling   = Http4sServerOptions
-      .defaultLogRequestHandling[F]
-      .copy(
-        logLogicExceptions = false
-      ),
-  )
+  private[this] lazy val _defaultOps =
+    Http4sServerOptions
+      .customInterceptors[F, F](
+        exceptionHandler         = Option(DefaultExceptionHandler),
+        serverLog                = Option(Log.defaultServerLog[F]),
+        blockingExecutionContext = blockingShifter.blocker.blockingContext,
+      )
 
   val dsl: org.http4s.dsl.Http4sDsl[F] = org.http4s.dsl.Http4sDsl[F]
-
-  implicit protected class OptionsOps(ops: Http4sServerOptions[F]) {
-
-    def withCustomHeaderAuthValidation(headerName: String): Http4sServerOptions[F] =
-      this.withAuthValidation(endpoint.PureharmTapirDecodeFailureHandler.missingCustomHeaderAuth(headerName))
-
-    def withBearerAuthValidation: Http4sServerOptions[F] =
-      this.withAuthValidation(endpoint.PureharmTapirDecodeFailureHandler.missingBearerAuth)
-
-    def withApiKeyAuthValidation: Http4sServerOptions[F] =
-      this.withAuthValidation(endpoint.PureharmTapirDecodeFailureHandler.missingApiKeyAuth)
-
-    def withAuthValidation(f: DecodeFailureContext => Option[DecodeFailureHandling]): Http4sServerOptions[F] =
-      ops.copy(
-        decodeFailureHandler = endpoint.PureharmTapirDecodeFailureHandler.handler(
-          missingOrInvalidAuth = f
-        )
-      )
-  }
 
 }

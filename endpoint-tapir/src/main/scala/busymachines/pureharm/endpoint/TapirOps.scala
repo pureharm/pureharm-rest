@@ -29,14 +29,14 @@ object TapirOps {
 
   final class AuthOps(val o: TapirAuth.type) extends AnyVal {
 
-    def xCustomAuthHeader[T: Codec[String, *, CodecFormat.TextPlain]](
-      headerName: String
-    ): EndpointInput.Auth.Http[T] = {
-      val codec     = implicitly[Codec[List[String], T, CodecFormat.TextPlain]]
-      val authCodec = Codec.list(Codec.string).map(codec).schema(codec.schema)
+    def xCustomAuthHeader[T](
+      headerName:         String
+    )(implicit authCodec: Codec[String, T, CodecFormat.TextPlain]): EndpointInput.Auth.Http[T] = {
+      implicit val listCodec: Codec[List[String], T, CodecFormat.TextPlain] =
+        Codec.listHead[String, T, CodecFormat.TextPlain]
       EndpointInput.Auth.Http(
         scheme             = "Custom",
-        input              = header[T](headerName)(authCodec).description(
+        input              = header[T](headerName)(listCodec).description(
           s"Authentication done with token required in header: $headerName"
         ),
         challenge          = EndpointInput.WWWAuthenticate.bearer(headerName),

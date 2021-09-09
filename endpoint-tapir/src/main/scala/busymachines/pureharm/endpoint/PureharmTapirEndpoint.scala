@@ -18,7 +18,9 @@ package busymachines.pureharm.endpoint
 
 import busymachines.pureharm.anomaly._
 import busymachines.pureharm.internals.json.AnomalyJsonCodec
+import sttp.tapir
 import sttp.tapir._
+import sttp.model.StatusCode
 
 /** @author
   *   Lorand Szakacs, https://github.com/lorandszakacs
@@ -26,7 +28,7 @@ import sttp.tapir._
   *   Jul 2020
   */
 object PureharmTapirEndpoint {
-  import busymachines.pureharm.json.{Codec => CCodec}
+  import busymachines.pureharm.json
 
   /** This should serve as your basis for most endpoints in your app. It provides grade A interpretation of all Anomaly
     * types, plus the good old mapping to status codes. You can easily glance the mapping from the implementation. But
@@ -38,54 +40,113 @@ object PureharmTapirEndpoint {
     *   ForbiddenAnomaly             StatusCode.Forbidden
     *   DeniedAnomaly                StatusCode.Forbidden
     *   InvalidInputAnomaly          StatusCode.BadRequest
-    *   ConflictAnomaly              StatusCode.Conflict
     *   Anomalies                    StatusCode.BadRequest
+    *   ConflictAnomaly              StatusCode.Conflict
     *   NotImplementedCatastrophe    StatusCode.NotImplemented
     *   Catastrophe                  StatusCode.InternalServerError
     *   Throwable                    StatusCode.InternalServerError
     * }}}
     */
-  def phEndpoint: Endpoint[Unit, Throwable, Unit, Any] = {
-    import sttp.tapir.json.circe._
+  def phEndpoint: Endpoint[Unit, AnomalyLike, Unit, Any] = {
+    implicit val anomalyLikeEnc: json.Encoder[AnomalyLike] = AnomalyJsonCodec.pureharmThrowableCodec.contramap(identity)
+    implicit val anomalyLikeDev: json.Decoder[AnomalyLike] = AnomalyJsonCodec.pureharmThrowableCodec.map {
+      case e:   AnomalyLike => e
+      case thr: Throwable   =>
+        UnhandledCatastrophe(s"Unhandled Throwable. This usually signals a bug. ", thr): AnomalyLike
+    }
 
-    implicit val thrCC: CCodec[Throwable] = AnomalyJsonCodec.pureharmThrowableCodec
+    implicit val anomalyScheme: Schema[AnomalyLike] = PureharmTapirSchemas.pureharmAnomalyTapirSchema.as[AnomalyLike]
+    val anomalyBody = tapir.json.circe.jsonBody[AnomalyLike]
 
-    implicit val nfcc: CCodec[NotFoundAnomaly]           = thrCC.asInstanceOf[CCodec[NotFoundAnomaly]]
-    implicit val uacc: CCodec[UnauthorizedAnomaly]       = thrCC.asInstanceOf[CCodec[UnauthorizedAnomaly]]
-    implicit val facc: CCodec[ForbiddenAnomaly]          = thrCC.asInstanceOf[CCodec[ForbiddenAnomaly]]
-    implicit val dncc: CCodec[DeniedAnomaly]             = thrCC.asInstanceOf[CCodec[DeniedAnomaly]]
-    implicit val iicc: CCodec[InvalidInputAnomaly]       = thrCC.asInstanceOf[CCodec[InvalidInputAnomaly]]
-    implicit val cfcc: CCodec[ConflictAnomaly]           = thrCC.asInstanceOf[CCodec[ConflictAnomaly]]
-    implicit val ascc: CCodec[Anomalies]                 = thrCC.asInstanceOf[CCodec[Anomalies]]
-    implicit val nicc: CCodec[NotImplementedCatastrophe] = thrCC.asInstanceOf[CCodec[NotImplementedCatastrophe]]
-    implicit val ctcc: CCodec[Catastrophe]               = thrCC.asInstanceOf[CCodec[Catastrophe]]
+    val badRequestMapping = sttp.tapir
+      .oneOfMappingValueMatcher(
+        statusCode = StatusCode.BadRequest,
+        output     = anomalyBody.description(
+          "Signals that there's something wrong with user input. Either display in error messages, or ensure that client cannot send bad data. This is the only case where we can have the .messages field in the error."
+        ),
+      ) {
+        case _: InvalidInputAnomaly => true
+        case _: Anomalies           => true
+        case _ => false
+      }
 
-    implicit val thrSc: Schema[Throwable]                 = PureharmTapirSchemas.tapirSchemaAnomalies
-    implicit val nfsc:  Schema[NotFoundAnomaly]           = thrSc.asInstanceOf[Schema[NotFoundAnomaly]]
-    implicit val uasc:  Schema[UnauthorizedAnomaly]       = thrSc.asInstanceOf[Schema[UnauthorizedAnomaly]]
-    implicit val fasc:  Schema[ForbiddenAnomaly]          = thrSc.asInstanceOf[Schema[ForbiddenAnomaly]]
-    implicit val dnsc:  Schema[DeniedAnomaly]             = thrSc.asInstanceOf[Schema[DeniedAnomaly]]
-    implicit val iisc:  Schema[InvalidInputAnomaly]       = thrSc.asInstanceOf[Schema[InvalidInputAnomaly]]
-    implicit val cfsc:  Schema[ConflictAnomaly]           = thrSc.asInstanceOf[Schema[ConflictAnomaly]]
-    implicit val assc:  Schema[Anomalies]                 = thrSc.asInstanceOf[Schema[Anomalies]]
-    implicit val nisc:  Schema[NotImplementedCatastrophe] = thrSc.asInstanceOf[Schema[NotImplementedCatastrophe]]
-    implicit val ctsc:  Schema[Catastrophe]               = thrSc.asInstanceOf[Schema[Catastrophe]]
+    val conflictMapping = tapir
+      .oneOfMappingValueMatcher(
+        statusCode = StatusCode.Conflict,
+        output     = anomalyBody.description(
+          "Signals that user input conflicts w/ current state of the application."
+        ),
+      ) {
+        case _: ConflictAnomaly => true
+        case _ => false
+      }
 
-    import sttp.model.StatusCode
-    endpoint.errorOut(
-      oneOf[Throwable](
-        // format: off
-        statusMapping(StatusCode.NotFound,            jsonBody[NotFoundAnomaly]          .description("not found")),
-        statusMapping(StatusCode.Unauthorized,        jsonBody[UnauthorizedAnomaly]      .description("unauthorized")),
-        statusMapping(StatusCode.Forbidden,           jsonBody[ForbiddenAnomaly]         .description("forbidden")),
-        statusMapping(StatusCode.Forbidden,           jsonBody[DeniedAnomaly]            .description("access denied")),
-        statusMapping(StatusCode.BadRequest,          jsonBody[InvalidInputAnomaly]      .description("invalid input")),
-        statusMapping(StatusCode.Conflict,            jsonBody[ConflictAnomaly]          .description("conflicting value")),
-        statusMapping(StatusCode.BadRequest,          jsonBody[Anomalies]                .description("invalid input, multiple validation")),
-        statusMapping(StatusCode.NotImplemented,      jsonBody[NotImplementedCatastrophe].description("not implemented")),
-        statusMapping(StatusCode.InternalServerError, jsonBody[Catastrophe]              .description("internal server error")),
-        statusMapping(StatusCode.InternalServerError, jsonBody[Throwable]                .description("internal server error")),
-        // format: on
+    val unauthorizedMapping = tapir
+      .oneOfMappingValueMatcher(
+        statusCode = StatusCode.Unauthorized,
+        output     = anomalyBody.description(
+          "Authentication missing, or invalid."
+        ),
+      ) {
+        case _: UnauthorizedAnomaly => true
+        case _ => false
+      }
+
+    val deniedAndForbiddenMapping = tapir
+      .oneOfMappingValueMatcher(
+        statusCode = StatusCode.Forbidden,
+        output     = anomalyBody.description(
+          "User is successfully authenticated, but they do not have specific permission to do this action."
+        ),
+      ) {
+        case _: DeniedAnomaly    => true
+        case _: ForbiddenAnomaly => true
+        case _ => false
+      }
+
+    val notFoundMapping = tapir
+      .oneOfMappingValueMatcher(
+        statusCode = StatusCode.NotFound,
+        output     = anomalyBody.description(
+          "Resource or endpoint does not exist."
+        ),
+      ) {
+        case _: NotFoundAnomaly => true
+        case _ => false
+      }
+
+    val internalServerError = tapir
+      .oneOfMappingValueMatcher(
+        statusCode = StatusCode.InternalServerError,
+        output     = anomalyBody.description(
+          "Something went wrong. This always signals a bug. Please report. There's nothing you can do except maybe retry."
+        ),
+      ) {
+        case _: Catastrophe => true
+        case _ => false
+      }
+
+    val notImplementedError = tapir
+      .oneOfMappingValueMatcher(
+        statusCode = StatusCode.NotImplemented,
+        output     = anomalyBody.description(
+          "Feature not yet implemented, please report and or check back in later."
+        ),
+      ) {
+        case _: NotImplementedCatastrophe                                                            => true
+        case u: UnhandledCatastrophe if u.causedBy.exists(_.isInstanceOf[scala.NotImplementedError]) => true
+        case _ => false
+      }
+
+    sttp.tapir.endpoint.errorOut(
+      tapir.oneOf[AnomalyLike](
+        badRequestMapping,
+        unauthorizedMapping,
+        deniedAndForbiddenMapping,
+        notFoundMapping,
+        conflictMapping,
+        internalServerError,
+        notImplementedError,
       )
     )
   }

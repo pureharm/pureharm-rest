@@ -24,18 +24,8 @@ import sttp.tapir.server
   *   Jul 2020
   */
 trait PureharmTapirServerAliases {
-  type DecodeFailureHandling = server.DecodeFailureHandling
-  val DecodeFailureHandling: server.DecodeFailureHandling.type = server.DecodeFailureHandling
-
-  type DecodeFailureContext = server.DecodeFailureContext
-  val DecodeFailureContext: server.DecodeFailureContext.type = server.DecodeFailureContext
-
-  type DecodeFailureHandler = DecodeFailureContext => DecodeFailureHandling
-
-  val ServerDefaults: server.ServerDefaults.type = server.ServerDefaults
-
   type ServerEndpoint[I, E, O, -R, F[_]]               = server.ServerEndpoint[I, E, O, R, F]
-  type PartialServerEndpoint[U, I, E, O, -R, F[_]]     = server.PartialServerEndpoint[U, I, E, O, R, F]
+  type PartialServerEndpoint[T, U, I, E, O, -R, F[_]]  = server.PartialServerEndpoint[T, U, I, E, O, R, F]
   type ServerEndpointInParts[U, IR, I, E, O, -R, F[_]] = server.ServerEndpointInParts[U, IR, I, E, O, R, F]
 
   type SimpleServerEndpoint[I, O, F[_]] = server.ServerEndpoint[I, Throwable, O, Nothing, F]

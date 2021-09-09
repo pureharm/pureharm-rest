@@ -34,7 +34,7 @@ trait PureharmRouteTypeAliases {
   type Http4sDsl[F[_]] = http4s.dsl.Http4sDsl[F]
   val Http4sDsl: http4s.dsl.Http4sDsl.type = http4s.dsl.Http4sDsl
 
-  type Http4sServerOptions[F[_]] = thttp4s.Http4sServerOptions[F]
+  type Http4sServerOptions[F[_], G[_]] = thttp4s.Http4sServerOptions[F, G]
   val Http4sServerOptions: thttp4s.Http4sServerOptions.type = thttp4s.Http4sServerOptions
 
   val Router: org.http4s.server.Router.type = org.http4s.server.Router

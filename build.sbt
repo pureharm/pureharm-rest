@@ -39,8 +39,8 @@ ThisBuild / homepage         := Option(url("https://github.com/busymachines/pure
 
 ThisBuild / scmInfo := Option(
   ScmInfo(
-    browseUrl  = url("https://github.com/busymachines/pureharm-testkit"),
-    connection = "git@github.com:busymachines/pureharm-testkit.git",
+    browseUrl  = url("https://github.com/busymachines/pureharm-rest"),
+    connection = "git@github.com:busymachines/pureharm-rest.git",
   )
 )
 
@@ -80,16 +80,13 @@ ThisBuild / versionIntroduced := Map(
 //=============================================================================
 //================================ Dependencies ===============================
 //=============================================================================
-//ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
-//ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
 
 // format: off
 val pureharmCoreV        = "0.3.0"      // https://github.com/busymachines/pureharm-core/releases
 val pureharmEffectsV     = "0.5.0"      // https://github.com/busymachines/pureharm-effects-cats/releases
 val pureharmJSONV        = "0.3.0-M1"   // https://github.com/busymachines/pureharm-json-circe/releases
-val pureharmTestkitV     = "0.4.0"      // https://github.com/busymachines/pureharm-testkit/releases
-val http4sV              = "0.21.27"     // https://github.com/http4s/http4s/releases
-val tapirV               = "0.17.9"     // https://github.com/softwaremill/tapir/releases
+val http4sV              = "0.22.4"     // https://github.com/http4s/http4s/releases
+val tapirV               = "0.18.0"     // https://github.com/softwaremill/tapir/releases
 val sttpSharedV          = "1.1.1"      // https://github.com/softwaremill/sttp-shared/releases
 val log4catsV            = "2.1.1"      // https://github.com/typelevel/log4cats/releases
 val log4catsCE2V         = "1.3.1"      // https://github.com/typelevel/log4cats/releases

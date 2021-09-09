@@ -29,7 +29,7 @@ object OpenAPIDocs {
     import sttp.tapir.docs.openapi._
     import sttp.tapir.openapi.circe.yaml._
 
-    OpenAPIDocsInterpreter
+    OpenAPIDocsInterpreter()
       .toOpenAPI(Fld.toList(es), info)
       .servers(servers.toList)
       .toYaml

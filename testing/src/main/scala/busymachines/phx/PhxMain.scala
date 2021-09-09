@@ -34,7 +34,7 @@ object PhxMain extends IOApp {
     } yield serverStream
 
   private def runServer[F[_]: ConcurrentEffect: Timer](ecology: PhxEcology[F]): Stream[F, ExitCode] = {
-    import org.http4s.server.blaze._
+    import org.http4s.blaze.server._
 
     BlazeServerBuilder[F](ecology.capabilities.blocker.blockingContext)
       .bindHttp(12345, "0.0.0.0")

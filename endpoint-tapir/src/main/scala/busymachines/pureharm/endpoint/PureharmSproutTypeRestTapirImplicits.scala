@@ -53,7 +53,7 @@ trait PureharmSproutTypeRestTapirImplicits extends sttp.tapir.json.circe.TapirJs
   /** Basically, it's union of the schema of AnomalyBase and AnomaliesBase, + any non-anomaly throwable is being wrapped
     * in an UnhandledAnomaly
     */
-  implicit val tapirSchemaThrowableAnomaly: tapir.Schema[Throwable] = PureharmTapirSchemas.tapirSchemaAnomalies
+  implicit val tapirSchemaThrowableAnomaly: tapir.Schema[Throwable] = PureharmTapirSchemas.pureharmThrowableTapirSchema
 
   implicit def pureharmTapirAuthOps(o: tapir.TapirAuth.type): TapirOps.AuthOps = new TapirOps.AuthOps(o)
 
