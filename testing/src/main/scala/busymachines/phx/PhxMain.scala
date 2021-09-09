@@ -18,27 +18,16 @@ package busymachines.phx
 
 import busymachines.phx.docs.PhxDocs
 import busymachines.pureharm.effects._
-import busymachines.pureharm.effects.implicits._
 
-object PhxMain extends IOApp {
-  override def run(args: List[String]): IO[ExitCode] = runF[IO]
+object PhxMain extends ResourceApp.Forever {
 
-  private def runF[F[_]: ConcurrentEffect: Timer: ContextShift]: F[ExitCode] =
-    this.serverResource[F].use(serverStream => serverStream.compile.toList.map(_.headOption.getOrElse(ExitCode.Error)))
+  override def run(args: List[String]): Resource[IO, Unit] = serverResource[IO]
 
-  private def serverResource[F[_]: ConcurrentEffect: Timer: ContextShift]: Resource[F, Stream[F, ExitCode]] =
+  private def serverResource[F[_]: Async]: Resource[F, Unit] =
     for {
       ecology <- PhxEcology.ecology[F]
       _       <- Resource.eval(PhxDocs.printDocs[F])
-      serverStream = runServer[F](ecology)
-    } yield serverStream
+      _       <- ecology.bindHttp4sServer
+    } yield ()
 
-  private def runServer[F[_]: ConcurrentEffect: Timer](ecology: PhxEcology[F]): Stream[F, ExitCode] = {
-    import org.http4s.blaze.server._
-
-    BlazeServerBuilder[F](ecology.capabilities.blocker.blockingContext)
-      .bindHttp(12345, "0.0.0.0")
-      .withHttpApp(ecology.http4sApp)
-      .serve
-  }
 }

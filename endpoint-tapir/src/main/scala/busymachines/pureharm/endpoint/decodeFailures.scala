@@ -324,17 +324,17 @@ object InvalidAuthHeader {
 final private[pureharm] case class MismatchAnomaly(
   tpe:          String,
   expected:     String,
-  given:        String,
+  `given`:      String,
   tapirMessage: String,
 ) extends InvalidInputAnomaly(
-    s"Mismatched input of type '$tpe' >> expected=$expected, given=$given."
+    s"Mismatched input of type '$tpe' >> expected=$expected, given=${`given`}."
   ) {
   override val id: AnomalyID = MismatchAnomaly.ID
 
   override val parameters: Anomaly.Parameters = Anomaly.Parameters(
     "type"       -> tpe,
     "expected"   -> expected,
-    "given"      -> given,
+    "given"      -> `given`,
     "diagnostic" -> tapirMessage,
   ) ++ super.parameters
 }

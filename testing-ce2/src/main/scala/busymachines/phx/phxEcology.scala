@@ -32,12 +32,11 @@ final case class PhxEcology[F[_]](
   http4sApp:    HttpApp[F],
 )
 
-final class PhxCapabilities[F[_]](
-  implicit val concurrentEffect: ConcurrentEffect[F],
-  implicit val timer:            Timer[F],
-  implicit val contextShift:     ContextShift[F],
-  implicit val blockingShifter:  BlockingShifter[F],
-  implicit val http4sRuntime:    PhxHttp4sRuntime[F],
+final class PhxCapabilities[F[_]](implicit
+  val timer:           Timer[F],
+  val contextShift:    ContextShift[F],
+  val blockingShifter: BlockingShifter[F],
+  val http4sRuntime:   PhxHttp4sRuntime[F],
 ) {
   val blocker: Blocker = blockingShifter.blocker
 }
@@ -53,21 +52,20 @@ final case class PhxRestAPI[F[_]](
 
 object PhxEcology {
 
-  @scala.annotation.nowarn
   def ecology[F[_]: ConcurrentEffect: ContextShift: Timer]: Resource[F, PhxEcology[F]] =
-    for {
-      capabilities <- this.capabilities[F]
-      implicit0(rt: PhxHttp4sRuntime[F]) = capabilities.http4sRuntime
-      domainLogic  <- this.domainLogic[F]
-
-      restAPIs  <- this.restAPIs[F](domainLogic)
-      http4sApp <- this.http4sApp[F](restAPIs)
-    } yield PhxEcology[F](
-      capabilities = capabilities,
-      domainLogic  = domainLogic,
-      restAPIs     = restAPIs,
-      http4sApp    = http4sApp,
-    )
+    this.capabilities[F].flatMap { capabilities =>
+      import capabilities._
+      for {
+        domainLogic <- this.domainLogic[F]
+        restAPIs    <- this.restAPIs[F](domainLogic)
+        http4sApp   <- this.http4sApp[F](restAPIs)
+      } yield PhxEcology[F](
+        capabilities = capabilities,
+        domainLogic  = domainLogic,
+        restAPIs     = restAPIs,
+        http4sApp    = http4sApp,
+      )
+    }
 
   def capabilities[F[_]: ConcurrentEffect: ContextShift: Timer]: Resource[F, PhxCapabilities[F]] =
     for {
@@ -75,11 +73,10 @@ object PhxEcology {
       blockingShifter = BlockingShifter.fromExecutionContext[F](blockingPool)
       phxHttp4s       = PhxHttp4sRuntime[F](blockingShifter)
     } yield new PhxCapabilities[F]()(
-      concurrentEffect = ConcurrentEffect[F],
-      timer            = Timer[F],
-      contextShift     = ContextShift[F],
-      blockingShifter  = blockingShifter,
-      http4sRuntime    = phxHttp4s,
+      timer           = Timer[F],
+      contextShift    = ContextShift[F],
+      blockingShifter = blockingShifter,
+      http4sRuntime   = phxHttp4s,
     )
 
   def domainLogic[F[_]: Sync]: Resource[F, PhxDomainLogic[F]] =

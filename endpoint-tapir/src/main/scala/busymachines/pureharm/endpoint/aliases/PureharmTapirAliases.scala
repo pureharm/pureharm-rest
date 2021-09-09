@@ -18,7 +18,7 @@ package busymachines.pureharm.endpoint.aliases
 
 import busymachines.pureharm.anomaly.AnomalyLike
 import sttp.tapir.{LowPrioritySchema, SchemaExtensions}
-import sttp.tapir.generic.internal.SchemaMagnoliaDerivation
+import sttp.tapir.macros.SchemaCompanionMacros
 
 /** Mirrors: sttp.tapir.TapirAliases but it realiases Codec to TapirCodec because that conflicts with Circe's Codec, and
   * that's way too annoying.
@@ -79,11 +79,11 @@ trait PureharmTapirAliases {
   /** Schema.scala */
   type Schema[T] = sttp.tapir.Schema[T]
 
-  val Schema: sttp.tapir.Schema.type with SchemaExtensions with SchemaMagnoliaDerivation with LowPrioritySchema =
+  val Schema: sttp.tapir.Schema.type with SchemaExtensions with LowPrioritySchema with SchemaCompanionMacros =
     sttp.tapir.Schema
 
   /** Tapir.scala */
-  type Tapir              = sttp.tapir.Tapir
+  type Tapir = sttp.tapir.Tapir
 
   /** TapirAuth.scala */
   val TapirAuth: sttp.tapir.TapirAuth.type = sttp.tapir.TapirAuth

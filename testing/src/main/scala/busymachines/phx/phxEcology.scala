@@ -26,21 +26,32 @@ import busymachines.pureharm.effects.pools.Pools
 import org.http4s.server.Router
 
 final case class PhxEcology[F[_]](
-  capabilities: PhxCapabilities[F],
-  domainLogic:  PhxDomainLogic[F],
-  restAPIs:     PhxRestAPI[F],
-  http4sApp:    HttpApp[F],
-)
+  capabilities:           PhxCapabilities[F],
+  domainLogic:            PhxDomainLogic[F],
+  restAPIs:               PhxRestAPI[F],
+  http4sApp:              HttpApp[F],
+)(implicit private val F: Async[F]) {
+
+  def bindHttp4sServer: Resource[F, Unit] = {
+    import org.http4s.blaze.server._
+
+    BlazeServerBuilder[F](capabilities.blazeEC)
+      .bindHttp(12345, "0.0.0.0")
+      .withHttpApp(http4sApp)
+      .resource
+      .void
+
+  }
+}
 
 final class PhxCapabilities[F[_]](
-  implicit val concurrentEffect: ConcurrentEffect[F],
-  implicit val timer:            Timer[F],
-  implicit val contextShift:     ContextShift[F],
-  implicit val blockingShifter:  BlockingShifter[F],
-  implicit val http4sRuntime:    PhxHttp4sRuntime[F],
-) {
-  val blocker: Blocker = blockingShifter.blocker
-}
+  val blazeEC: ExecutionContext
+)(implicit
+  val routes:  Routes[F],
+  val console: Console[F],
+  val random:  CERandom[F],
+  val uuidGen: UUIDGen[F],
+)
 
 final case class PhxDomainLogic[F[_]](
   authStack:    PhxAuthStack[F],
@@ -53,36 +64,33 @@ final case class PhxRestAPI[F[_]](
 
 object PhxEcology {
 
-  @scala.annotation.nowarn
-  def ecology[F[_]: ConcurrentEffect: ContextShift: Timer]: Resource[F, PhxEcology[F]] =
-    for {
-      capabilities <- this.capabilities[F]
-      implicit0(rt: PhxHttp4sRuntime[F]) = capabilities.http4sRuntime
-      domainLogic  <- this.domainLogic[F]
+  def ecology[F[_]: Async]: Resource[F, PhxEcology[F]] =
+    this.capabilities[F].flatMap { capabilities =>
+      import capabilities._
+      for {
+        domainLogic <- this.domainLogic[F]
+        restAPIs    <- this.restAPIs[F](domainLogic)
+        http4sApp   <- this.http4sApp[F](restAPIs)
+      } yield PhxEcology[F](
+        capabilities = capabilities,
+        domainLogic  = domainLogic,
+        restAPIs     = restAPIs,
+        http4sApp    = http4sApp,
+      )
+    }
 
-      restAPIs  <- this.restAPIs[F](domainLogic)
-      http4sApp <- this.http4sApp[F](restAPIs)
-    } yield PhxEcology[F](
-      capabilities = capabilities,
-      domainLogic  = domainLogic,
-      restAPIs     = restAPIs,
-      http4sApp    = http4sApp,
+  def capabilities[F[_]: Async]: Resource[F, PhxCapabilities[F]] =
+    for {
+      routes  <- Routes[F].pure[Resource[F, *]]
+      blazeEC <- Pools.cached[F](threadNamePrefix = "blaze-pool")
+    } yield new PhxCapabilities[F](blazeEC = blazeEC)(
+      routes                               = routes,
+      console                              = Console.make[F],
+      random                               = CERandom.javaUtilConcurrentThreadLocalRandom[F],
+      uuidGen                              = UUIDGen.fromSync[F],
     )
 
-  def capabilities[F[_]: ConcurrentEffect: ContextShift: Timer]: Resource[F, PhxCapabilities[F]] =
-    for {
-      blockingPool <- Pools.cached("phx-blocking")
-      blockingShifter = BlockingShifter.fromExecutionContext[F](blockingPool)
-      phxHttp4s       = PhxHttp4sRuntime[F](blockingShifter)
-    } yield new PhxCapabilities[F]()(
-      concurrentEffect = ConcurrentEffect[F],
-      timer            = Timer[F],
-      contextShift     = ContextShift[F],
-      blockingShifter  = blockingShifter,
-      http4sRuntime    = phxHttp4s,
-    )
-
-  def domainLogic[F[_]: Sync]: Resource[F, PhxDomainLogic[F]] =
+  def domainLogic[F[_]: MonadThrow: CERandom: UUIDGen: Console]: Resource[F, PhxDomainLogic[F]] =
     for {
       phxAuth <- PhxAuthStack.resource[F]
       phxOrg  <- PhxOrganizer.resource[F](phxAuth)
@@ -91,17 +99,19 @@ object PhxEcology {
       phxOrganizer = phxOrg,
     )
 
-  def restAPIs[F[_]: Monad: PhxHttp4sRuntime](domain: PhxDomainLogic[F]): Resource[F, PhxRestAPI[F]] =
+  private def restAPIs[F[_]: MonadThrow: CERandom: UUIDGen: Routes: Console](
+    domain: PhxDomainLogic[F]
+  ): Resource[F, PhxRestAPI[F]] =
     for {
       phxRoutes <- PhxRoutes.resource[F](domain.phxOrganizer)
     } yield PhxRestAPI[F](
       phxRoutes = phxRoutes
     )
 
-  def http4sApp[F[_]: Monad](apis: PhxRestAPI[F]): Resource[F, HttpApp[F]] = {
+  private def http4sApp[F[_]: Monad](apis: PhxRestAPI[F]): Resource[F, HttpApp[F]] = {
     val routes: HttpRoutes[F] = NEList
       .of(
-        apis.phxRoutes.routes
+        apis.phxRoutes.http4sRoutes
       )
       .reduceK
 

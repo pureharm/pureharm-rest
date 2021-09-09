@@ -31,7 +31,7 @@ object TapirCodecs {
     tc: tapir.Codec.PlainCodec[Underlying],
   ): tapir.Codec.PlainCodec[PT] = {
     val m = tapir.Mapping.fromDecode[Underlying, PT](
-      f = { u: Underlying =>
+      f = { (u: Underlying) =>
         p.newType[Either[Throwable, *]](u) match {
           case Right(v) => tapir.DecodeResult.Value(v)
           case Left(e)  =>

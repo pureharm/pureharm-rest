@@ -18,14 +18,11 @@ package busymachines.pureharm.route
 
 import scala.annotation.implicitNotFound
 import busymachines.pureharm.effects._
-import sttp.tapir.server.http4s.{Http4sResponseBody, Http4sServerOptions}
+import sttp.tapir.server.http4s.Http4sServerOptions
 import sttp.tapir.server.http4s.Http4sServerOptions.Log
-import sttp.tapir.server.interceptor.Interceptor
-import sttp.tapir.server.interceptor.content.UnsupportedMediaTypeInterceptor
 import sttp.tapir.server.interceptor.decodefailure.{DecodeFailureHandler, DefaultDecodeFailureHandler}
 import sttp.tapir.server.interceptor.exception.{DefaultExceptionHandler, ExceptionHandler}
 import sttp.tapir.server.interceptor.log.ServerLog
-import sttp.tapir.server.interceptor.metrics.MetricsRequestInterceptor
 
 /** Encapsulates all things needed to translate tapir Endpoints to http4s Route.
   *

@@ -22,7 +22,9 @@ import busymachines.pureharm.effects.implicits._
 import busymachines.phx.domain._
 import busymachines.phx.domain.auth._
 
-final class PhxOrganizer[F[_]] private (authStack: PhxAuthStack[F])(implicit F: Sync[F]) {
+final class PhxOrganizer[F[_]: MonadThrow: UUIDGen: CERandom] private (authStack: PhxAuthStack[F])(implicit
+  console: Console[F]
+) {
 
   private def withAuth[T](f: PhxAuthCtx => F[T])(implicit token: MyAuthToken): F[T] =
     for {
@@ -32,17 +34,23 @@ final class PhxOrganizer[F[_]] private (authStack: PhxAuthStack[F])(implicit F: 
 
   def getLogic(id: PHUUID)(implicit auth: MyAuthToken): F[MyOutputType] = withAuth { ctx: PhxAuthCtx =>
     for {
-      _   <- F.delay(println(s"I AM $ctx"))
-      _   <- F.delay(println(s"GET LOGIC HERE — $id"))
+      _   <- console.println(s"I AM $ctx")
+      _   <- console.println(s"GET LOGIC HERE — $id")
+      f1  <- PHString.generate[F]
+      f2  <- PHInt.generate[F]
+      f3  <- PHLong.generate[F]
+      fl  <- PHLong.generate[F].replicateA(1)
+      f4  <- PHUUID.generate[F].replicateA(3)
+      f5  <- PHString.generate[F]
       sf6 <- SafePHUUIDThr.generate[F]
     } yield MyOutputType(
       id  = id,
-      f1  = PHString.unsafeGenerate,
-      f2  = PHInt.unsafeGenerate,
-      f3  = PHLong.unsafeGenerate,
-      fl  = List(PHLong.unsafeGenerate),
-      f4  = List(PHUUID.unsafeGenerate, PHUUID.unsafeGenerate, PHUUID.unsafeGenerate),
-      f5  = Option(PHString.unsafeGenerate),
+      f1  = f1,
+      f2  = f2,
+      f3  = f3,
+      fl  = fl,
+      f4  = f4,
+      f5  = Option(f5),
       sf6 = sf6,
     )
   }
@@ -50,8 +58,8 @@ final class PhxOrganizer[F[_]] private (authStack: PhxAuthStack[F])(implicit F: 
   def postLogic(input: MyInputType)(implicit auth: MyAuthToken): F[MyOutputType] =
     for {
       ctx <- authStack.authenticate(auth)
-      _   <- F.delay(println(s"I AM $ctx"))
-      _   <- Sync[F].delay(println(s"POST LOGIC HERE — $input"))
+      _   <- console.println(s"I AM $ctx")
+      _   <- console.println(s"POST LOGIC HERE — $input")
       id  <- PHUUID.generate[F]
     } yield MyOutputType(
       id  = id,
@@ -67,7 +75,7 @@ final class PhxOrganizer[F[_]] private (authStack: PhxAuthStack[F])(implicit F: 
 
 object PhxOrganizer {
 
-  def resource[F[_]](authStack: PhxAuthStack[F])(implicit F: Sync[F]): Resource[F, PhxOrganizer[F]] =
+  def resource[F[_]: MonadThrow: UUIDGen: CERandom: Console](authStack: PhxAuthStack[F]): Resource[F, PhxOrganizer[F]] =
     new PhxOrganizer[F](authStack).pure[Resource[F, *]]
 
 }

@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package busymachines.pureharm
+package busymachines.phx.util.route
 
-import busymachines.pureharm.effects.Concurrent
+import busymachines.pureharm.route
+import busymachines.pureharm.effects._
 
-package object route {
+object Routes {
 
-  @scala.deprecated("Use Http4sRoutes instead. Otherwise it's source compatible", "0.5.0")
-  type RestDefs[F[_], ET <: Concurrent[F], RT <: Http4sRuntime[F, ET]] =
-    busymachines.pureharm.route.Http4sRoutes[F, ET, RT]
-
-  @scala.deprecated("Use PureharmRouteTypeAliases instead", "0.5.0")
-  type PureharmRestHttp4sTypeAliases = PureharmRouteTypeAliases
+  def apply[F[_]](implicit eff: Async[F]): Routes[F] = new route.Routes[F] {
+    override protected def F:                   Async[F]                  = eff
+    override protected def http4sServerOptions: Http4sServerOptions[F, F] = _opts
+    private lazy val _opts = customServerOpsHelper()
+  }
 }
