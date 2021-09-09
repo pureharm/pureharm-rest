@@ -84,6 +84,7 @@ trait PureharmTapirAliases {
 
   /** Tapir.scala */
   type Tapir              = sttp.tapir.Tapir
+  type TapirDerivedInputs = sttp.tapir.TapirDerivedInputs
 
   /** TapirAuth.scala */
   val TapirAuth: sttp.tapir.TapirAuth.type = sttp.tapir.TapirAuth
