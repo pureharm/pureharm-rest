@@ -17,25 +17,13 @@
 package busymachines.phx.util.route
 
 import busymachines.pureharm.route
-import busymachines.phx.util.endpoint._
 import busymachines.pureharm.effects._
 
-//----- Create one of these for your app
-final class PhxHttp4sRuntime[F[_]](
-  override val blockingShifter: BlockingShifter[F]
-)(implicit
-  override val F:               Concurrent[F],
-  override val timer:           Timer[F],
-) extends route.Http4sRuntime[F, Concurrent[F]] {
+object Routes {
 
-  override val http4sServerOptions: Http4sServerOptions[F] =
-    super.http4sServerOptions.withCustomHeaderAuthValidation(CustomHeaders.`X-AUTH-TOKEN`.toString)
-}
-
-object PhxHttp4sRuntime {
-
-  def apply[F[_]](
-    blockingShifter: BlockingShifter[F]
-  )(implicit f:      Concurrent[F], t: Timer[F]): PhxHttp4sRuntime[F] =
-    new PhxHttp4sRuntime(blockingShifter)
+  def apply[F[_]](implicit eff: Async[F]): Routes[F] = new route.Routes[F] {
+    override protected def F:                   Async[F]                  = eff
+    override protected def http4sServerOptions: Http4sServerOptions[F, F] = _opts
+    private lazy val _opts = customServerOpsHelper()
+  }
 }

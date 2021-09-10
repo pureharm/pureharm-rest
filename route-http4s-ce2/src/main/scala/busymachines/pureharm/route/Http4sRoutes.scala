@@ -16,6 +16,7 @@
 
 package busymachines.pureharm.route
 
+import busymachines.pureharm.anomaly.AnomalyLike
 import busymachines.pureharm.effects.{BlockingShifter, Concurrent, ContextShift, Timer}
 import org.http4s.HttpRoutes
 import sttp.capabilities.WebSockets
@@ -31,11 +32,11 @@ trait Http4sRoutes[F[_], ET <: Concurrent[F], RT <: Http4sRuntime[F, ET]] {
   implicit protected def contextShift:    ContextShift[F]    = http4sRuntime.contextShift
   implicit protected def timer:           Timer[F]           = http4sRuntime.timer
 
-  implicit protected def tapirHttp4Ops: Http4sServerOptions[F]  = http4sRuntime.http4sServerOptions
-  implicit protected val http4sServer:  Http4sServerInterpreter = Http4sServerInterpreter
+  implicit protected def tapirHttp4Ops: Http4sServerOptions[F, F]  = http4sRuntime.http4sServerOptions
+  implicit protected val http4sServer:  Http4sServerInterpreter[F] = Http4sServerInterpreter[F](tapirHttp4Ops)
 
   protected def fromEndpoint[I, O](
-    e: Endpoint[I, Throwable, O, Fs2Streams[F] with WebSockets]
+    e: Endpoint[I, AnomalyLike, O, Fs2Streams[F] with WebSockets]
   )(f: I => F[O]): HttpRoutes[F] =
-    http4sServer.toRouteRecoverErrors[I, Throwable, O, F](e)(f)
+    http4sServer.toRouteRecoverErrors[I, AnomalyLike, O](e)(f)
 }

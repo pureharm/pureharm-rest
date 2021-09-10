@@ -18,4 +18,6 @@ package busymachines.phx.util
 
 import busymachines.pureharm.route
 
-package object route extends route.PureharmRouteTypeAliases with route.PureharmRouteAllImplicits
+package object route extends route.PureharmRouteTypeAliases with route.PureharmRouteAllImplicits {
+  type Routes[F[_]] = route.Routes[F]
+}

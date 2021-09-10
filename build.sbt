@@ -23,6 +23,7 @@ addCommandAlias("format", ";scalafmtSbt;scalafmtConfig;scalafmtAll")
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val Scala213 = "2.13.6"
+val Scala3   = "3.0.2"
 
 //=============================================================================
 //============================ publishing details =============================
@@ -39,8 +40,8 @@ ThisBuild / homepage         := Option(url("https://github.com/busymachines/pure
 
 ThisBuild / scmInfo := Option(
   ScmInfo(
-    browseUrl  = url("https://github.com/busymachines/pureharm-testkit"),
-    connection = "git@github.com:busymachines/pureharm-testkit.git",
+    browseUrl  = url("https://github.com/busymachines/pureharm-rest"),
+    connection = "git@github.com:busymachines/pureharm-rest.git",
   )
 )
 
@@ -71,26 +72,27 @@ ThisBuild / Test / publishArtifact    := false
 
 ThisBuild / scalaVersion       := Scala213
 ThisBuild / crossScalaVersions := List(Scala213)
+//ThisBuild / crossScalaVersions := List(Scala213, Scala3)
 
 //required for binary compat checks
 ThisBuild / versionIntroduced := Map(
-  Scala213 -> "0.1.0"
+  Scala213 -> "0.1.0",
+  //Scala3   -> "0.5.0-M2",
 )
 
 //=============================================================================
 //================================ Dependencies ===============================
 //=============================================================================
-//ThisBuild / resolvers += Resolver.sonatypeRepo("releases")
-//ThisBuild / resolvers += Resolver.sonatypeRepo("snapshots")
 
 // format: off
 val pureharmCoreV        = "0.3.0"      // https://github.com/busymachines/pureharm-core/releases
 val pureharmEffectsV     = "0.5.0"      // https://github.com/busymachines/pureharm-effects-cats/releases
 val pureharmJSONV        = "0.3.0-M1"   // https://github.com/busymachines/pureharm-json-circe/releases
-val pureharmTestkitV     = "0.4.0"      // https://github.com/busymachines/pureharm-testkit/releases
-val http4sV              = "0.21.27"     // https://github.com/http4s/http4s/releases
-val tapirV               = "0.17.9"     // https://github.com/softwaremill/tapir/releases
-val sttpSharedV          = "1.1.1"      // https://github.com/softwaremill/sttp-shared/releases
+val http4sV              = "0.23.3"     // https://github.com/http4s/http4s/releases
+val http4sCE2V           = "0.22.4"     // https://github.com/http4s/http4s/releases
+val tapirV               = "0.19.0-M8"  // https://github.com/softwaremill/tapir/releases
+val tapirCE2V            = "0.18.3"     // https://github.com/softwaremill/tapir/releases
+val sttpSharedV          = "1.2.6"      // https://github.com/softwaremill/sttp-shared/releases
 val log4catsV            = "2.1.1"      // https://github.com/typelevel/log4cats/releases
 val log4catsCE2V         = "1.3.1"      // https://github.com/typelevel/log4cats/releases
 val logbackV             = "1.2.3"      // https://github.com/qos-ch/logback/releases
@@ -103,9 +105,13 @@ lazy val root = project
   .in(file("."))
   .aggregate(
     `endpoint-tapir`,
+    `endpoint-tapir-ce2`,
     `endpoint-docs-tapir`,
+    `endpoint-docs-tapir-ce2`,
     `route-http4s`,
+    `route-http4s-ce2`,
     `testing`,
+    `testing-ce2`,
   )
   .enablePlugins(NoPublishPlugin)
   .enablePlugins(SonatypeCiReleasePlugin)
@@ -117,11 +123,27 @@ lazy val `endpoint-tapir` = project
       // format: off
       "com.busymachines"                %% "pureharm-core-anomaly"          % pureharmCoreV         withSources(),
       "com.busymachines"                %% "pureharm-core-sprout"           % pureharmCoreV         withSources(),
-      "com.busymachines"                %% "pureharm-effects-cats-2"        % pureharmEffectsV      withSources(),
+      "com.busymachines"                %% "pureharm-effects-cats"          % pureharmEffectsV      withSources(),
       "com.busymachines"                %% "pureharm-json-circe"            % pureharmJSONV         withSources(),
       "com.softwaremill.sttp.shared"    %% "fs2"                            % sttpSharedV           withSources(),
       "com.softwaremill.sttp.tapir"     %% "tapir-core"                     % tapirV                withSources(),
       "com.softwaremill.sttp.tapir"     %% "tapir-json-circe"               % tapirV                withSources(),
+      // format: on
+    ),
+  )
+
+lazy val `endpoint-tapir-ce2` = project
+  .settings(
+    name := "pureharm-endpoint-tapir-ce2",
+    libraryDependencies ++= Seq(
+      // format: off
+      "com.busymachines"                %% "pureharm-core-anomaly"          % pureharmCoreV         withSources(),
+      "com.busymachines"                %% "pureharm-core-sprout"           % pureharmCoreV         withSources(),
+      "com.busymachines"                %% "pureharm-effects-cats-2"        % pureharmEffectsV      withSources(),
+      "com.busymachines"                %% "pureharm-json-circe"            % pureharmJSONV         withSources(),
+      "com.softwaremill.sttp.shared"    %% "fs2-ce2"                        % sttpSharedV           withSources(),
+      "com.softwaremill.sttp.tapir"     %% "tapir-core"                     % tapirCE2V             withSources(),
+      "com.softwaremill.sttp.tapir"     %% "tapir-json-circe"               % tapirCE2V             withSources(),
       // format: on
     ),
   )
@@ -137,6 +159,17 @@ lazy val `endpoint-docs-tapir` = project
     ),
   )
 
+lazy val `endpoint-docs-tapir-ce2` = project
+  .settings(
+    name := "pureharm-endpoint-docs-tapir-ce2",
+    libraryDependencies ++= Seq(
+      // format: off
+      "com.softwaremill.sttp.tapir"     %% "tapir-openapi-docs"             % tapirCE2V             withSources(),
+      "com.softwaremill.sttp.tapir"     %% "tapir-openapi-circe-yaml"       % tapirCE2V             withSources(),
+      // format: on
+    ),
+  )
+
 lazy val `route-http4s` = project
   .settings(
     name := "pureharm-route-http4s-tapir",
@@ -144,6 +177,9 @@ lazy val `route-http4s` = project
       // format: off
       "org.http4s"                      %% "http4s-dsl"                     % http4sV               withSources(),
       "com.softwaremill.sttp.tapir"     %% "tapir-http4s-server"            % tapirV                withSources(),
+      //these are the dependencies of tapir-http4s-server, so we use newer ones here
+      "org.http4s"                      %% "http4s-server"                  % http4sV               withSources(),
+      "org.http4s"                      %% "http4s-blaze-core"              % http4sV               withSources(),
       // format: on
     ),
   )
@@ -151,13 +187,43 @@ lazy val `route-http4s` = project
     `endpoint-tapir`
   )
 
+lazy val `route-http4s-ce2` = project
+  .settings(
+    name := "pureharm-route-http4s-tapir-ce2",
+    libraryDependencies ++= Seq(
+      // format: off
+      "com.softwaremill.sttp.tapir"     %% "tapir-http4s-server"            % tapirCE2V             withSources(),
+      //these are the dependencies of tapir-http4s-server, so we use newer ones here
+      "org.http4s"                      %% "http4s-dsl"                     % http4sCE2V            withSources(),
+      "org.http4s"                      %% "http4s-server"                  % http4sCE2V            withSources(),
+      "org.http4s"                      %% "http4s-blaze-core"              % http4sCE2V            withSources(),
+      // format: on
+    ),
+  )
+  .dependsOn(
+    `endpoint-tapir-ce2`
+  )
+
 lazy val `server-http4s` = project
   .settings(
     name := "pureharm-server-http4s",
     libraryDependencies ++= Seq(
       // format: off
+      "com.busymachines"                %% "pureharm-effects-cats"          % pureharmEffectsV      withSources(),
+      "org.http4s"                      %% "http4s-server"                  % http4sV               withSources(),
+      "org.http4s"                      %% "http4s-blaze-core"              % http4sV               withSources(),
+      // format: on
+    ),
+  )
+
+lazy val `server-http4s-ce2` = project
+  .settings(
+    name := "pureharm-server-http4s-ce2",
+    libraryDependencies ++= Seq(
+      // format: off
       "com.busymachines"                %% "pureharm-effects-cats-2"        % pureharmEffectsV      withSources(),
-      "org.http4s"                      %% "http4s-blaze-server"            % http4sV               withSources(),
+      "org.http4s"                      %% "http4s-server"                  % http4sCE2V            withSources(),
+      "org.http4s"                      %% "http4s-blaze-core"              % http4sCE2V            withSources(),
       // format: on
     ),
   )
@@ -168,8 +234,9 @@ lazy val `testing` = project
     name := "pureharm-rest-testing",
     libraryDependencies ++= Seq(
       // format: off
-      "org.typelevel"                   %% "log4cats-slf4j"                 % log4catsCE2V          withSources(),
-      "ch.qos.logback"                   % "logback-classic"                % logbackV              withSources()
+      "org.http4s"                      %% "http4s-blaze-server"            % http4sV               withSources(),
+      "org.typelevel"                   %% "log4cats-slf4j"                 % log4catsV             withSources(),
+      "ch.qos.logback"                   % "logback-classic"                % logbackV              withSources(),
       // format: on
     ),
   )
@@ -178,4 +245,23 @@ lazy val `testing` = project
     `endpoint-docs-tapir`,
     `route-http4s`,
     `server-http4s`,
+  )
+
+lazy val `testing-ce2` = project
+  .enablePlugins(NoPublishPlugin)
+  .settings(
+    name := "pureharm-rest-testing-ce2",
+    libraryDependencies ++= Seq(
+      // format: off
+      "org.http4s"                      %% "http4s-blaze-server"            % http4sCE2V            withSources(),
+      "org.typelevel"                   %% "log4cats-slf4j"                 % log4catsCE2V          withSources(),
+      "ch.qos.logback"                   % "logback-classic"                % logbackV              withSources(),
+      // format: on
+    ),
+  )
+  .dependsOn(
+    `endpoint-tapir-ce2`,
+    `endpoint-docs-tapir-ce2`,
+    `route-http4s-ce2`,
+    `server-http4s-ce2`,
   )

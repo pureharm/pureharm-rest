@@ -16,38 +16,16 @@
 
 package busymachines.pureharm.endpoint.aliases
 
+import busymachines.pureharm.anomaly.AnomalyLike
 import sttp.tapir.{LowPrioritySchema, SchemaExtensions}
-import sttp.tapir.generic.internal.SchemaMagnoliaDerivation
+import sttp.tapir.macros.SchemaCompanionMacros
 
 /** Mirrors: sttp.tapir.TapirAliases but it realiases Codec to TapirCodec because that conflicts with Circe's Codec, and
   * that's way too annoying.
   */
 trait PureharmTapirAliases {
 
-  type SimpleEndpoint[I, O] = sttp.tapir.Endpoint[I, Throwable, O, Any]
-
-  /** This should serve as your basis for most endpoints in your app. It provides grade A interpretation of all Anomaly
-    * types, plus the good old mapping to status codes. You can easily glance the mapping from the implementation. But
-    * here it is for easy glancing:
-    *
-    * {{{
-    *   NotFoundAnomaly              StatusCode.NotFound
-    *   UnauthorizedAnomaly          StatusCode.Unauthorized
-    *   ForbiddenAnomaly             StatusCode.Forbidden
-    *   DeniedAnomaly                StatusCode.Forbidden
-    *   InvalidInputAnomaly          StatusCode.BadRequest
-    *   ConflictAnomaly              StatusCode.Conflict
-    *   Anomalies                    StatusCode.BadRequest
-    *   NotImplementedCatastrophe    StatusCode.NotImplemented
-    *   Catastrophe                  StatusCode.InternalServerError
-    *   Throwable                    StatusCode.InternalServerError
-    * }}}
-    */
-  @scala.deprecated(
-    "Use yourn own by calling the method busymachines.pureharm.endpoints.PureharmTapirEndpoint.phEndpoint once.\nDepending directly on val from a library is quite footgunny.",
-    "now",
-  )
-  val phEndpoint: SimpleEndpoint[Unit, Unit] = busymachines.pureharm.endpoint.PureharmTapirEndpoint.phEndpoint
+  type SimpleEndpoint[I, O] = sttp.tapir.Endpoint[I, AnomalyLike, O, Any]
 
   //mirroring starts here:
   type CodecFormat = sttp.tapir.CodecFormat
@@ -95,18 +73,17 @@ trait PureharmTapirAliases {
   val RenderPathTemplate: sttp.tapir.RenderPathTemplate.type = sttp.tapir.RenderPathTemplate
 
   /** SchemaType.scala */
-  type SchemaType = sttp.tapir.SchemaType
+  type SchemaType[T] = sttp.tapir.SchemaType[T]
   val SchemaType: sttp.tapir.SchemaType.type = sttp.tapir.SchemaType
 
   /** Schema.scala */
   type Schema[T] = sttp.tapir.Schema[T]
 
-  val Schema: sttp.tapir.Schema.type with SchemaExtensions with SchemaMagnoliaDerivation with LowPrioritySchema =
+  val Schema: sttp.tapir.Schema.type with SchemaExtensions with LowPrioritySchema with SchemaCompanionMacros =
     sttp.tapir.Schema
 
   /** Tapir.scala */
-  type Tapir              = sttp.tapir.Tapir
-  type TapirDerivedInputs = sttp.tapir.TapirDerivedInputs
+  type Tapir = sttp.tapir.Tapir
 
   /** TapirAuth.scala */
   val TapirAuth: sttp.tapir.TapirAuth.type = sttp.tapir.TapirAuth
