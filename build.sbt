@@ -76,7 +76,7 @@ ThisBuild / crossScalaVersions := List(Scala213)
 
 //required for binary compat checks
 ThisBuild / versionIntroduced := Map(
-  Scala213 -> "0.1.0",
+  Scala213 -> "0.1.0"
   //Scala3   -> "0.5.0-M2",
 )
 
