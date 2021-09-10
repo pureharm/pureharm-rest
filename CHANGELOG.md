@@ -7,8 +7,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 # unreleased
 
+# 0.5.0-M2
+
 ### dependency upgrades
 
+For cats-effect 3 compatible modules:
+- [tapir](https://github.com/softwaremill/tapir/releases) `0.19.0-M8` — with the downstream break in source compat due to
+  tapir.
+- [http4s](https://github.com/http4s/http4s/releases) `0.23.3`
+
+For cats-effect 2 compatible modules:
 - [tapir](https://github.com/softwaremill/tapir/releases) `0.18.3` — with the downstream break in source compat due to
   tapir.
 - [http4s](https://github.com/http4s/http4s/releases) `0.22.4`
