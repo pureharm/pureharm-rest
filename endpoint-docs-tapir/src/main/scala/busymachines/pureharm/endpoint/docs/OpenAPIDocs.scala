@@ -18,31 +18,63 @@ package busymachines.pureharm.endpoint.docs
 
 import cats.Foldable
 import sttp.tapir.Endpoint
+import sttp.tapir.docs.openapi._
+import sttp.tapir.openapi.circe.yaml._
+import sttp.tapir.openapi.circe._
+import io.circe.Printer
+import io.circe.syntax._
 
 object OpenAPIDocs {
 
-  def fromEndpoints[F[_]](
+  def yamlFromEndpoints[F[_]](
     es:           F[Endpoint[_, _, _, _]],
     info:         Info,
     servers:      Server*
-  )(implicit Fld: Foldable[F]): String = {
-    import sttp.tapir.docs.openapi._
-    import sttp.tapir.openapi.circe.yaml._
-
+  )(implicit Fld: Foldable[F]): String =
     OpenAPIDocsInterpreter()
       .toOpenAPI(Fld.toList(es), info)
       .servers(servers.toList)
       .toYaml
-  }
 
-  def fromEndpoints[F[_]](
+  def yamlFromEndpoints[F[_]](
     es:           F[Endpoint[_, _, _, _]],
     title:        String,
     version:      String,
     description:  String,
     servers:      Server*
   )(implicit Fld: Foldable[F]): String =
-    this.fromEndpoints[F](
+    this.yamlFromEndpoints[F](
+      es,
+      info = Info(
+        title       = title,
+        version     = version,
+        description = Option(description),
+      ),
+      servers: _*
+    )
+
+  def jsonFromEndpoints[F[_]](
+    es:           F[Endpoint[_, _, _, _]],
+    info:         Info,
+    servers:      Server*
+  )(implicit Fld: Foldable[F]): String = {
+
+    val docs =
+      OpenAPIDocsInterpreter()
+        .toOpenAPI(Fld.toList(es), info)
+        .servers(servers.toList)
+
+    Printer.spaces2.print(docs.asJson)
+  }
+
+  def jsonFromEndpoints[F[_]](
+    es:           F[Endpoint[_, _, _, _]],
+    title:        String,
+    version:      String,
+    description:  String,
+    servers:      Server*
+  )(implicit Fld: Foldable[F]): String =
+    this.jsonFromEndpoints[F](
       es,
       info = Info(
         title       = title,

@@ -28,7 +28,7 @@ import busymachines.phx.api.PhxEndpoints
 object PhxDocs {
 
   def printDocs[F[_]: Sync]: F[Unit] = {
-    val docs = OpenAPIDocs.fromEndpoints(
+    val docs = OpenAPIDocs.yamlFromEndpoints(
       PhxEndpoints.endpoints,
       title       = "PHX API w/ tapir and http4s",
       version     = "0.4",
