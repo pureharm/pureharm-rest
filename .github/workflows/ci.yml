@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        scala: [2.13.6, 3.0.2]
+        scala: [2.13.6]
         java: [adopt@1.8]
     runs-on: ${{ matrix.os }}
     steps:
@@ -58,7 +58,7 @@ jobs:
       - run: sbt ++${{ matrix.scala }} ci
 
       - name: Compress target directories
-        run: tar cf targets.tar target endpoint-docs-tapir/target testing/target route-http4s/target endpoint-tapir/target server-http4s/target project/target
+        run: tar cf targets.tar target endpoint-tapir-ce2/target endpoint-docs-tapir-ce2/target endpoint-docs-tapir/target testing/target testing-ce2/target route-http4s/target endpoint-tapir/target route-http4s-ce2/target server-http4s-ce2/target server-http4s/target project/target
 
       - name: Upload target directories
         uses: actions/upload-artifact@v2
@@ -105,16 +105,6 @@ jobs:
           name: target-${{ matrix.os }}-2.13.6-${{ matrix.java }}
 
       - name: Inflate target directories (2.13.6)
-        run: |
-          tar xf targets.tar
-          rm targets.tar
-
-      - name: Download target directories (3.0.2)
-        uses: actions/download-artifact@v2
-        with:
-          name: target-${{ matrix.os }}-3.0.2-${{ matrix.java }}
-
-      - name: Inflate target directories (3.0.2)
         run: |
           tar xf targets.tar
           rm targets.tar
