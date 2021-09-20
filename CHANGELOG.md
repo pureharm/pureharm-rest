@@ -7,6 +7,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 # unreleased
 
+### dependency upgrades
+
+- [tapir](https://github.com/softwaremill/tapir/releases) `0.19.0-M9`
+
 # 0.5.0-M2
 
 ### dependency upgrades
